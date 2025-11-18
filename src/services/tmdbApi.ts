@@ -1,11 +1,11 @@
 import axios from 'axios';
 import { MovieResponse, Movie } from '../types/movie';
+import { TMDB_CONFIG } from '../utils/constants';
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
-const BASE_URL = 'https://api.themoviedb.org/3';
 
 const api = axios.create({
-  baseURL: BASE_URL,
+  baseURL: TMDB_CONFIG.BASE_URL,
   params: {
     api_key: API_KEY,
   },
@@ -43,8 +43,11 @@ export const tmdbApi = {
   },
 };
 
-export const getImageUrl = (path: string | null, size: 'w500' | 'original' = 'w500'): string => {
+export const getImageUrl = (
+  path: string | null,
+  size: 'w185' | 'w500' | 'w780' | 'original' = 'w500'
+): string => {
   if (!path) return 'https://via.placeholder.com/500x750?text=No+Image';
-  return `https://image.tmdb.org/t/p/${size}${path}`;
+  return `${TMDB_CONFIG.IMAGE_BASE_URL}/${size}${path}`;
 };
 
