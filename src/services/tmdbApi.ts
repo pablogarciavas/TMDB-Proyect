@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { MovieResponse, Movie } from '../types/movie';
+import { GenreResponse } from '../types/genre';
 import { TMDB_CONFIG } from '../utils/constants';
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -8,6 +9,7 @@ const api = axios.create({
   baseURL: TMDB_CONFIG.BASE_URL,
   params: {
     api_key: API_KEY,
+    language: 'en-US', // Set default language to English
   },
 });
 
@@ -37,6 +39,36 @@ export const tmdbApi = {
   // Obtener películas mejor valoradas
   getTopRatedMovies: async (page: number = 1): Promise<MovieResponse> => {
     const { data } = await api.get<MovieResponse>('/movie/top_rated', {
+      params: { page },
+    });
+    return data;
+  },
+
+  // Get movie genres
+  getGenres: async (): Promise<GenreResponse> => {
+    const { data } = await api.get<GenreResponse>('/genre/movie/list', {
+      params: {
+        language: 'en-US',
+      },
+    });
+    return data;
+  },
+
+  // Obtener películas por género
+  getMoviesByGenre: async (genreId: number, page: number = 1): Promise<MovieResponse> => {
+    const { data } = await api.get<MovieResponse>('/discover/movie', {
+      params: {
+        with_genres: genreId,
+        page,
+        sort_by: 'popularity.desc',
+      },
+    });
+    return data;
+  },
+
+  // Obtener próximos estrenos
+  getUpcomingMovies: async (page: number = 1): Promise<MovieResponse> => {
+    const { data } = await api.get<MovieResponse>('/movie/upcoming', {
       params: { page },
     });
     return data;

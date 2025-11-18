@@ -1,95 +1,142 @@
-import React, { useEffect, useState } from 'react'
-import { tmdbApi } from './services/tmdbApi'
-import { Movie } from './types/movie'
-import { Loading } from './components/ui/Loading'
-import { ErrorMessage } from './components/ui/ErrorMessage'
-import { formatRating, getYear } from './utils/formatters'
+import React, { useState } from 'react';
+import { Header, SearchBar } from './components/common';
+import { Movie } from './types/movie';
 
 function App() {
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [movies, setMovies] = useState<Movie[]>([])
-  const [apiStatus, setApiStatus] = useState<string>('Probando conexión...')
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+  const [currentView, setCurrentView] = useState<string>('home');
+  const [currentGenre, setCurrentGenre] = useState<{ id: number; name: string } | null>(null);
 
-  useEffect(() => {
-    const testApi = async () => {
-      try {
-        setApiStatus('🔄 Conectando con TMDB API...')
-        console.log('🔍 Iniciando prueba de API...')
-        console.log('📋 API Key configurada:', import.meta.env.VITE_TMDB_API_KEY ? '✅ Sí' : '❌ No')
-        
-        const response = await tmdbApi.getPopularMovies(1)
-        
-        console.log('✅ API funcionando correctamente!')
-        console.log('📊 Datos recibidos:', response)
-        console.log(`🎬 Total de películas: ${response.results.length}`)
-        
-        setMovies(response.results.slice(0, 5)) // Mostrar solo las primeras 5
-        setApiStatus('✅ API conectada correctamente!')
-        setLoading(false)
-      } catch (err: any) {
-        console.error('❌ Error al conectar con la API:', err)
-        setError(err.message || 'Error desconocido')
-        setApiStatus('❌ Error al conectar con la API')
-        setLoading(false)
-      }
+  const handleGenreSelect = (genreId: number, genreName: string) => {
+    console.log('Genre selected:', genreId, genreName);
+    setCurrentGenre({ id: genreId, name: genreName });
+    setCurrentView('genre');
+    // Here you'll implement the logic to show movies by genre
+  };
+
+  const handleNavigate = (route: string) => {
+    console.log('Navigating to:', route);
+    if (route === 'home') {
+      setCurrentView('home');
+      setCurrentGenre(null);
+      setSelectedMovie(null);
+    } else {
+      setCurrentView(route);
+      setCurrentGenre(null);
     }
+    // Here you'll implement navigation to different sections
+  };
 
-    testApi()
-  }, [])
+  const handleMovieSelect = (movie: Movie) => {
+    console.log('Movie selected:', movie);
+    setSelectedMovie(movie);
+    // Here you'll implement the movie detail view
+  };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold text-center mb-8">
-          🎬 MovieDB
-        </h1>
-        
-        {/* Estado de la API */}
-        <div className="max-w-2xl mx-auto mb-8 p-4 rounded-lg bg-gray-800">
-          <h2 className="text-xl font-semibold mb-2">Estado de la API:</h2>
-          <p className={loading ? 'text-yellow-400' : error ? 'text-red-400' : 'text-green-400'}>
-            {apiStatus}
-          </p>
-          {error && (
-            <p className="text-red-400 text-sm mt-2">
-              Detalles: {error}
-            </p>
+    <div className="min-h-screen bg-beige flex flex-col">
+      <Header onGenreSelect={handleGenreSelect} onNavigate={handleNavigate} />
+      
+      <main className="flex-1 flex items-center justify-center">
+        <div className="container-elegant w-full">
+          {currentView === 'home' && (
+            <>
+              {/* Search bar centered vertically */}
+              <div className="animate-fadeInUp opacity-0" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
+                <SearchBar onMovieSelect={handleMovieSelect} />
+              </div>
+              
+              <div className="text-center mt-8 animate-fadeInUp opacity-0" style={{ animationDelay: '0.4s', animationFillMode: 'forwards' }}>
+                <p className="text-dark-medium text-lg md:text-xl max-w-2xl mx-auto">
+                  Search for your favorite movie in the search bar
+                </p>
+              </div>
+            </>
+          )}
+
+          {/* Contenido de otras vistas */}
+          {currentView !== 'home' && (
+            <div className="animate-fadeInUp opacity-0" style={{ animationDelay: '0.4s', animationFillMode: 'forwards' }}>
+
+              {currentView === 'genre' && currentGenre && (
+                <div className="text-center py-12">
+                  <h2 className="text-2xl md:text-3xl font-bold text-dark mb-4">
+                    Genre: {currentGenre.name}
+                  </h2>
+                  <p className="text-dark-medium">
+                    Feature in development...
+                  </p>
+                </div>
+              )}
+
+              {currentView === 'top-rated' && (
+                <div className="text-center py-12">
+                  <h2 className="text-2xl md:text-3xl font-bold text-dark mb-4">
+                    Top Rated
+                  </h2>
+                  <p className="text-dark-medium">
+                    Feature in development...
+                  </p>
+                </div>
+              )}
+
+              {currentView === 'favorites' && (
+                <div className="text-center py-12">
+                  <h2 className="text-2xl md:text-3xl font-bold text-dark mb-4">
+                    Favorites
+                  </h2>
+                  <p className="text-dark-medium">
+                    Feature in development...
+                  </p>
+                </div>
+              )}
+
+              {currentView === 'watchlist' && (
+                <div className="text-center py-12">
+                  <h2 className="text-2xl md:text-3xl font-bold text-dark mb-4">
+                    Watchlist
+                  </h2>
+                  <p className="text-dark-medium">
+                    Feature in development...
+                  </p>
+                </div>
+              )}
+
+              {currentView === 'upcoming' && (
+                <div className="text-center py-12">
+                  <h2 className="text-2xl md:text-3xl font-bold text-dark mb-4">
+                    Upcoming
+                  </h2>
+                  <p className="text-dark-medium">
+                    Feature in development...
+                  </p>
+                </div>
+              )}
+
+              {currentView === 'minigame' && (
+                <div className="text-center py-12">
+                  <h2 className="text-2xl md:text-3xl font-bold text-dark mb-4">
+                    Minigame
+                  </h2>
+                  <p className="text-dark-medium">
+                    Feature in development...
+                  </p>
+                </div>
+              )}
+
+              {selectedMovie && (
+                <div className="max-w-4xl mx-auto mt-8 p-6 bg-beige-light rounded-2xl border border-beige-medium">
+                  <h2 className="text-2xl font-bold text-dark mb-4">{selectedMovie.title}</h2>
+                  <p className="text-dark-medium">{selectedMovie.overview}</p>
+                </div>
+              )}
+            </div>
           )}
         </div>
-
-        {/* Instrucciones para verificar en el navegador */}
-        <div className="max-w-2xl mx-auto mb-8 p-4 rounded-lg bg-blue-900 bg-opacity-30 border border-blue-500">
-          <h3 className="text-lg font-semibold mb-2">🔍 Cómo verificar en el navegador:</h3>
-          <ol className="list-decimal list-inside space-y-2 text-sm text-gray-300">
-            <li>Abre las <strong>DevTools</strong> (F12 o clic derecho → Inspeccionar)</li>
-            <li>Ve a la pestaña <strong>"Console"</strong> para ver los logs</li>
-            <li>Ve a la pestaña <strong>"Network"</strong> para ver las peticiones HTTP</li>
-            <li>Busca peticiones a <code className="bg-gray-700 px-1 rounded">api.themoviedb.org</code></li>
-          </ol>
-        </div>
-
-        {/* Mostrar películas de prueba si la API funciona */}
-        {!loading && !error && movies.length > 0 && (
-          <div className="max-w-2xl mx-auto">
-            <h2 className="text-2xl font-bold mb-4">🎬 Películas populares (prueba):</h2>
-            <div className="space-y-3">
-              {movies.map((movie) => (
-                <div key={movie.id} className="bg-gray-800 p-4 rounded-lg">
-                  <h3 className="text-lg font-semibold">{movie.title}</h3>
-                  <p className="text-sm text-gray-400">
-                    ⭐ {formatRating(movie.vote_average)} | 📅 {getYear(movie.release_date)}
-                  </p>
-                  <p className="text-sm text-gray-300 mt-2 line-clamp-2">{movie.overview}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
+      </main>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
 
