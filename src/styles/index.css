@@ -1,16 +1,172 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  * {
+    @apply border-beige-medium;
+  }
+  
   body {
-    @apply bg-gray-900 text-white;
+    @apply bg-beige text-dark font-sans antialiased;
+    font-feature-settings: 'kern' 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-dark font-semibold;
+  }
+  
+  p {
+    @apply text-dark-medium leading-relaxed;
   }
 }
 
 @layer components {
-  .movie-card {
-    @apply transition-transform duration-300 hover:scale-105;
+  /* Botones minimalistas */
+  .btn-primary {
+    @apply bg-dark text-beige-light px-6 py-3 rounded-lg 
+           transition-all duration-200 
+           hover:bg-dark-medium 
+           active:scale-[0.98]
+           font-medium
+           disabled:opacity-50 disabled:cursor-not-allowed;
   }
+  
+  .btn-secondary {
+    @apply bg-beige-medium text-dark px-6 py-3 rounded-lg 
+           border border-dark/10
+           transition-all duration-200 
+           hover:bg-beige 
+           active:scale-[0.98]
+           font-medium;
+  }
+  
+  /* Inputs minimalistas */
+  .input {
+    @apply w-full px-4 py-3 rounded-2xl 
+           bg-beige-light border border-beige-medium
+           text-dark placeholder-dark-light
+           focus:outline-none focus:ring-2 focus:ring-dark/20 focus:border-dark/30
+           transition-all duration-200;
+  }
+  
+  /* Contenedor principal */
+  .container-elegant {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  /* Espaciado vertical elegante */
+  .section-spacing {
+    @apply py-12 md:py-16 lg:py-20;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .transition-smooth {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* Animaciones personalizadas */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animate-fadeInDown {
+  animation: fadeInDown 0.6s ease-out forwards;
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.6s ease-out forwards;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.4s ease-out forwards;
+}
+
+/* Delays para animaciones escalonadas */
+.delay-100 {
+  animation-delay: 0.1s;
+}
+
+.delay-200 {
+  animation-delay: 0.2s;
+}
+
+.delay-300 {
+  animation-delay: 0.3s;
+}
+
+.delay-400 {
+  animation-delay: 0.4s;
+}
+
+.delay-500 {
+  animation-delay: 0.5s;
 }
 

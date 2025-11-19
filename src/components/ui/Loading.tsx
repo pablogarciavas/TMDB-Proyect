@@ -18,10 +18,10 @@ export const Loading: React.FC<LoadingProps> = ({
   return (
     <div className="flex flex-col items-center justify-center py-12">
       <div
-        className={`${sizeClasses[size]} animate-spin rounded-full border-t-2 border-b-2 border-primary-500`}
+        className={`${sizeClasses[size]} animate-spin rounded-full border-4 border-beige-medium border-t-dark`}
       ></div>
       {message && (
-        <p className="mt-4 text-gray-400 text-sm">{message}</p>
+        <p className="mt-4 text-dark-medium text-sm">{message}</p>
       )}
     </div>
   );
