@@ -1,6 +1,7 @@
 import React from 'react';
 import { Movie } from '../../types/movie';
 import { getImageUrl } from '../../services/tmdbApi';
+import { StarIcon, CalendarIcon } from '@heroicons/react/24/outline';
 
 interface MovieCardProps {
   movie: Movie;
@@ -56,8 +57,14 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick, index = 0 
           {movie.title}
         </h3>
         <div className="flex items-center justify-between text-sm text-dark-medium">
-          <span>⭐ {formatRating(movie.vote_average)}</span>
-          <span>📅 {formatYear(movie.release_date)}</span>
+          <span className="flex items-center gap-1">
+            <StarIcon className="w-4 h-4" />
+            {formatRating(movie.vote_average)}
+          </span>
+          <span className="flex items-center gap-1">
+            <CalendarIcon className="w-4 h-4" />
+            {formatYear(movie.release_date)}
+          </span>
         </div>
       </div>
     </div>

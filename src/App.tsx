@@ -1,18 +1,23 @@
 import React, { useState } from 'react';
 import { Header, SearchBar } from './components/common';
-import { MovieListPage } from './components/movie/MovieListPage';
+import { MovieListPage, MovieDetail } from './components/movie';
 import { Movie } from './types/movie';
+import { useSmoothScroll } from './hooks/useSmoothScroll';
 
 function App() {
-  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+  // Enable smooth scroll with momentum
+  useSmoothScroll();
+  const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
   const [currentView, setCurrentView] = useState<string>('home');
   const [currentGenre, setCurrentGenre] = useState<{ id: number; name: string } | null>(null);
 
   const handleGenreSelect = (genreId: number, genreName: string) => {
     console.log('Genre selected:', genreId, genreName);
+    setSelectedMovieId(null); // Clear selected movie when navigating to genre
     setCurrentGenre({ id: genreId, name: genreName });
     setCurrentView('genre');
-    // Here you'll implement the logic to show movies by genre
+    // Scroll to top when navigating
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleNavigate = (route: string) => {
@@ -20,18 +25,34 @@ function App() {
     if (route === 'home') {
       setCurrentView('home');
       setCurrentGenre(null);
-      setSelectedMovie(null);
+      setSelectedMovieId(null);
     } else {
       setCurrentView(route);
       setCurrentGenre(null);
+      setSelectedMovieId(null);
     }
-    // Here you'll implement navigation to different sections
+    // Scroll to top when navigating
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleMovieSelect = (movie: Movie) => {
     console.log('Movie selected:', movie);
-    setSelectedMovie(movie);
-    // Here you'll implement the movie detail view
+    setSelectedMovieId(movie.id);
+    setCurrentView('movie-detail');
+    // Scroll to top when navigating to movie detail
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleBackFromDetail = () => {
+    if (currentGenre) {
+      setCurrentView('genre');
+      setSelectedMovieId(null);
+    } else {
+      setCurrentView('home');
+      setSelectedMovieId(null);
+    }
+    // Scroll to top when going back
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -59,7 +80,15 @@ function App() {
           {currentView !== 'home' && (
             <div className="animate-fadeInUp opacity-0" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
 
-              {currentView === 'genre' && currentGenre && (
+              {currentView === 'movie-detail' && selectedMovieId && (
+                <MovieDetail
+                  movieId={selectedMovieId}
+                  onBack={handleBackFromDetail}
+                  onMovieClick={handleMovieSelect}
+                />
+              )}
+
+              {currentView === 'genre' && currentGenre && !selectedMovieId && (
                 <MovieListPage
                   genreId={currentGenre.id}
                   genreName={currentGenre.name}
@@ -122,12 +151,6 @@ function App() {
                 </div>
               )}
 
-              {selectedMovie && (
-                <div className="max-w-4xl mx-auto mt-8 p-6 bg-beige-light rounded-2xl border border-beige-medium">
-                  <h2 className="text-2xl font-bold text-dark mb-4">{selectedMovie.title}</h2>
-                  <p className="text-dark-medium">{selectedMovie.overview}</p>
-                </div>
-              )}
             </div>
           )}
         </div>
