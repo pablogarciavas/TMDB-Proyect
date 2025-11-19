@@ -54,13 +54,18 @@ export const tmdbApi = {
     return data;
   },
 
-  // Obtener películas por género
-  getMoviesByGenre: async (genreId: number, page: number = 1): Promise<MovieResponse> => {
+  // Get movies by genre with optional filters
+  getMoviesByGenre: async (genreId: number, page: number = 1, customParams?: any): Promise<MovieResponse> => {
+    const defaultParams = {
+      with_genres: genreId,
+      page,
+      sort_by: 'popularity.desc',
+    };
+    
     const { data } = await api.get<MovieResponse>('/discover/movie', {
       params: {
-        with_genres: genreId,
-        page,
-        sort_by: 'popularity.desc',
+        ...defaultParams,
+        ...customParams,
       },
     });
     return data;

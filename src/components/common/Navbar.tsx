@@ -100,7 +100,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onGenreSelect, onNavigate }) => 
         </button>
 
         {openDropdown === 'genre' && (
-          <div className="absolute top-full left-0 mt-2 w-auto min-w-[700px] bg-beige-light/95 backdrop-blur-md border border-beige-medium/50 rounded-2xl shadow-minimal-lg z-[60] animate-scaleIn">
+          <div className="absolute top-full left-0 mt-2 w-auto min-w-[700px] bg-beige-light/95 backdrop-blur-md border border-beige-medium/50 rounded-2xl shadow-minimal-lg z-[100] animate-scaleIn">
             <div className="p-6">
               <div className="flex gap-x-4">
                 {[0, 1, 2, 3, 4].map((colIndex) => {

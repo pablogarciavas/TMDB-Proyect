@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Header, SearchBar } from './components/common';
+import { MovieListPage } from './components/movie/MovieListPage';
 import { Movie } from './types/movie';
 
 function App() {
@@ -37,7 +38,7 @@ function App() {
     <div className="min-h-screen bg-beige flex flex-col">
       <Header onGenreSelect={handleGenreSelect} onNavigate={handleNavigate} />
       
-      <main className="flex-1 flex items-center justify-center">
+      <main className={`flex-1 ${currentView === 'home' ? 'flex items-center justify-center' : ''}`}>
         <div className="container-elegant w-full">
           {currentView === 'home' && (
             <>
@@ -56,17 +57,14 @@ function App() {
 
           {/* Contenido de otras vistas */}
           {currentView !== 'home' && (
-            <div className="animate-fadeInUp opacity-0" style={{ animationDelay: '0.4s', animationFillMode: 'forwards' }}>
+            <div className="animate-fadeInUp opacity-0" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
 
               {currentView === 'genre' && currentGenre && (
-                <div className="text-center py-12">
-                  <h2 className="text-2xl md:text-3xl font-bold text-dark mb-4">
-                    Genre: {currentGenre.name}
-                  </h2>
-                  <p className="text-dark-medium">
-                    Feature in development...
-                  </p>
-                </div>
+                <MovieListPage
+                  genreId={currentGenre.id}
+                  genreName={currentGenre.name}
+                  onMovieClick={handleMovieSelect}
+                />
               )}
 
               {currentView === 'top-rated' && (
