@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Header, SearchBar } from './components/common';
-import { MovieListPage, MovieDetail, PersonMoviesPage, CompanyMoviesPage, WatchlistPage, UpcomingPage } from './components/movie';
+import { MovieListPage, MovieDetail, PersonMoviesPage, CompanyMoviesPage, WatchlistPage, UpcomingPage, MovieGuessGame } from './components/movie';
 import { Movie } from './types/movie';
 import { Person } from './types/person';
 import { Company } from './types/company';
@@ -183,14 +183,7 @@ function App() {
               )}
 
               {currentView === 'minigame' && (
-                <div className="text-center py-12">
-                  <h2 className="text-2xl md:text-3xl font-bold text-dark mb-4">
-                    Minigame
-                  </h2>
-                  <p className="text-dark-medium">
-                    Feature in development...
-                  </p>
-                </div>
+                <MovieGuessGame />
               )}
 
             </div>

@@ -26,7 +26,20 @@ export const tmdbApi = {
   },
 
   // Buscar películas
-  searchMovies: async (query: string, page: number = 1): Promise<MovieResponse> => {
+  searchMovies: async (query: string, page: number = 1, includeAllLanguages: boolean = false): Promise<MovieResponse> => {
+    // Si includeAllLanguages es true, hacer la petición sin especificar idioma
+    if (includeAllLanguages) {
+      const { data } = await axios.get<MovieResponse>(`${TMDB_CONFIG.BASE_URL}/search/movie`, {
+        params: {
+          api_key: API_KEY,
+          query,
+          page,
+          // No incluir language para buscar en todos los idiomas
+        },
+      });
+      return data;
+    }
+    // Búsqueda normal con idioma por defecto (en-US)
     const { data } = await api.get<MovieResponse>('/search/movie', {
       params: { query, page },
     });
