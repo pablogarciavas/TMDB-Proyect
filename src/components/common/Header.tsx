@@ -12,7 +12,7 @@ export const Header: React.FC<HeaderProps> = ({ onGenreSelect, onNavigate }) => 
   };
 
   return (
-    <header className="w-full bg-beige">
+    <header className="w-full bg-beige relative z-50">
       <div className="container-elegant">
         <div className="flex items-center justify-between py-4 md:py-5">
           {/* Título a la izquierda */}

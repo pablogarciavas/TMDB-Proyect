@@ -9,6 +9,35 @@
     @apply border-beige-medium;
   }
   
+  html {
+    /* Lenis manejará el scroll smooth */
+    overflow-x: hidden;
+  }
+  
+  html.lenis {
+    height: auto;
+  }
+  
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+  
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+  
+  .lenis.lenis-scrolling iframe {
+    pointer-events: none;
+  }
+  
+  img {
+    @apply border-0;
+  }
+  
   body {
     @apply bg-beige text-dark font-sans antialiased;
     font-feature-settings: 'kern' 1;

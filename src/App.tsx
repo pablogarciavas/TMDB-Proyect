@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
 import { Header, SearchBar } from './components/common';
+import { MovieListPage, MovieDetail } from './components/movie';
 import { Movie } from './types/movie';
+import { useSmoothScroll, scrollTo } from './hooks/useSmoothScroll';
 
 function App() {
-  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+  // Enable smooth scroll with Lenis
+  useSmoothScroll();
+  const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
   const [currentView, setCurrentView] = useState<string>('home');
   const [currentGenre, setCurrentGenre] = useState<{ id: number; name: string } | null>(null);
 
   const handleGenreSelect = (genreId: number, genreName: string) => {
     console.log('Genre selected:', genreId, genreName);
+    setSelectedMovieId(null); // Clear selected movie when navigating to genre
     setCurrentGenre({ id: genreId, name: genreName });
     setCurrentView('genre');
-    // Here you'll implement the logic to show movies by genre
+    // Scroll to top when navigating
+    scrollTo(0, { immediate: false });
   };
 
   const handleNavigate = (route: string) => {
@@ -19,25 +25,41 @@ function App() {
     if (route === 'home') {
       setCurrentView('home');
       setCurrentGenre(null);
-      setSelectedMovie(null);
+      setSelectedMovieId(null);
     } else {
       setCurrentView(route);
       setCurrentGenre(null);
+      setSelectedMovieId(null);
     }
-    // Here you'll implement navigation to different sections
+    // Scroll to top when navigating
+    scrollTo(0, { immediate: false });
   };
 
   const handleMovieSelect = (movie: Movie) => {
     console.log('Movie selected:', movie);
-    setSelectedMovie(movie);
-    // Here you'll implement the movie detail view
+    setSelectedMovieId(movie.id);
+    setCurrentView('movie-detail');
+    // Scroll to top when navigating to movie detail
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleBackFromDetail = () => {
+    if (currentGenre) {
+      setCurrentView('genre');
+      setSelectedMovieId(null);
+    } else {
+      setCurrentView('home');
+      setSelectedMovieId(null);
+    }
+    // Scroll to top when going back
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
     <div className="min-h-screen bg-beige flex flex-col">
       <Header onGenreSelect={handleGenreSelect} onNavigate={handleNavigate} />
       
-      <main className="flex-1 flex items-center justify-center">
+      <main className={`flex-1 ${currentView === 'home' ? 'flex items-center justify-center' : ''}`}>
         <div className="container-elegant w-full">
           {currentView === 'home' && (
             <>
@@ -56,17 +78,22 @@ function App() {
 
           {/* Contenido de otras vistas */}
           {currentView !== 'home' && (
-            <div className="animate-fadeInUp opacity-0" style={{ animationDelay: '0.4s', animationFillMode: 'forwards' }}>
+            <div className="animate-fadeInUp opacity-0" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
 
-              {currentView === 'genre' && currentGenre && (
-                <div className="text-center py-12">
-                  <h2 className="text-2xl md:text-3xl font-bold text-dark mb-4">
-                    Genre: {currentGenre.name}
-                  </h2>
-                  <p className="text-dark-medium">
-                    Feature in development...
-                  </p>
-                </div>
+              {currentView === 'movie-detail' && selectedMovieId && (
+                <MovieDetail
+                  movieId={selectedMovieId}
+                  onBack={handleBackFromDetail}
+                  onMovieClick={handleMovieSelect}
+                />
+              )}
+
+              {currentView === 'genre' && currentGenre && !selectedMovieId && (
+                <MovieListPage
+                  genreId={currentGenre.id}
+                  genreName={currentGenre.name}
+                  onMovieClick={handleMovieSelect}
+                />
               )}
 
               {currentView === 'top-rated' && (
@@ -124,12 +151,6 @@ function App() {
                 </div>
               )}
 
-              {selectedMovie && (
-                <div className="max-w-4xl mx-auto mt-8 p-6 bg-beige-light rounded-2xl border border-beige-medium">
-                  <h2 className="text-2xl font-bold text-dark mb-4">{selectedMovie.title}</h2>
-                  <p className="text-dark-medium">{selectedMovie.overview}</p>
-                </div>
-              )}
             </div>
           )}
         </div>

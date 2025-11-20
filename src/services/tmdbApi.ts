@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { MovieResponse, Movie } from '../types/movie';
 import { GenreResponse } from '../types/genre';
+import { MovieDetails, Credits, WatchProviders, Videos } from '../types/movieDetails';
 import { TMDB_CONFIG } from '../utils/constants';
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -30,9 +31,35 @@ export const tmdbApi = {
     return data;
   },
 
-  // Obtener detalles de una película
-  getMovieDetails: async (id: number): Promise<Movie> => {
-    const { data } = await api.get<Movie>(`/movie/${id}`);
+  // Get movie details
+  getMovieDetails: async (id: number): Promise<MovieDetails> => {
+    const { data } = await api.get<MovieDetails>(`/movie/${id}`);
+    return data;
+  },
+
+  // Get movie credits (cast and crew)
+  getMovieCredits: async (id: number): Promise<Credits> => {
+    const { data } = await api.get<Credits>(`/movie/${id}/credits`);
+    return data;
+  },
+
+  // Get watch providers (where to watch)
+  getWatchProviders: async (id: number): Promise<WatchProviders> => {
+    const { data } = await api.get<WatchProviders>(`/movie/${id}/watch/providers`);
+    return data;
+  },
+
+  // Get similar movies
+  getSimilarMovies: async (id: number, page: number = 1): Promise<MovieResponse> => {
+    const { data } = await api.get<MovieResponse>(`/movie/${id}/similar`, {
+      params: { page },
+    });
+    return data;
+  },
+
+  // Get movie videos (trailers)
+  getMovieVideos: async (id: number): Promise<Videos> => {
+    const { data } = await api.get<Videos>(`/movie/${id}/videos`);
     return data;
   },
 
@@ -54,13 +81,18 @@ export const tmdbApi = {
     return data;
   },
 
-  // Obtener películas por género
-  getMoviesByGenre: async (genreId: number, page: number = 1): Promise<MovieResponse> => {
+  // Get movies by genre with optional filters
+  getMoviesByGenre: async (genreId: number, page: number = 1, customParams?: any): Promise<MovieResponse> => {
+    const defaultParams = {
+      with_genres: genreId,
+      page,
+      sort_by: 'popularity.desc',
+    };
+    
     const { data } = await api.get<MovieResponse>('/discover/movie', {
       params: {
-        with_genres: genreId,
-        page,
-        sort_by: 'popularity.desc',
+        ...defaultParams,
+        ...customParams,
       },
     });
     return data;
