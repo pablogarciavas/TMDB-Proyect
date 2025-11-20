@@ -3,8 +3,12 @@ import { Movie } from '../types/movie';
 
 const WATCHLIST_STORAGE_KEY = 'movie_watchlist';
 
+export interface WatchlistMovie extends Movie {
+  addedAt: string; // ISO date string
+}
+
 interface WatchlistContextType {
-  watchlist: Movie[];
+  watchlist: WatchlistMovie[];
   addToWatchlist: (movie: Movie) => void;
   removeFromWatchlist: (movieId: number) => void;
   isInWatchlist: (movieId: number) => boolean;
@@ -14,7 +18,7 @@ interface WatchlistContextType {
 const WatchlistContext = createContext<WatchlistContextType | undefined>(undefined);
 
 export const WatchlistProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [watchlist, setWatchlist] = useState<Movie[]>([]);
+  const [watchlist, setWatchlist] = useState<WatchlistMovie[]>([]);
 
   // Cargar watchlist desde sessionStorage al montar
   useEffect(() => {
@@ -22,7 +26,12 @@ export const WatchlistProvider: React.FC<{ children: ReactNode }> = ({ children 
       const stored = sessionStorage.getItem(WATCHLIST_STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
-        setWatchlist(parsed);
+        // Asegurar que todas las películas tengan addedAt (para compatibilidad con watchlists antiguas)
+        const watchlistWithDates: WatchlistMovie[] = parsed.map((movie: any) => ({
+          ...movie,
+          addedAt: movie.addedAt || new Date().toISOString(), // Fecha por defecto si no existe
+        }));
+        setWatchlist(watchlistWithDates);
       }
     } catch (error) {
       console.error('Error loading watchlist from sessionStorage:', error);
@@ -44,7 +53,12 @@ export const WatchlistProvider: React.FC<{ children: ReactNode }> = ({ children 
       if (prev.some((m) => m.id === movie.id)) {
         return prev;
       }
-      return [...prev, movie];
+      // Añadir la película con la fecha de adición
+      const watchlistMovie: WatchlistMovie = {
+        ...movie,
+        addedAt: new Date().toISOString(),
+      };
+      return [...prev, watchlistMovie];
     });
   }, []);
 

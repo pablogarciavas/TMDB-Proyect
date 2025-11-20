@@ -99,7 +99,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       {/* Dropdown de resultados */}
       {isOpen && (results.length > 0 || loading) && (
         <div 
-          className="absolute top-full left-0 right-0 mt-2 bg-beige-light border border-beige-medium rounded-2xl shadow-minimal-lg z-40 max-h-96 overflow-y-auto animate-scaleIn"
+          className="absolute top-full left-0 right-0 mt-2 bg-beige-light border border-beige-medium rounded-2xl shadow-minimal-lg z-40 max-h-96 overflow-hidden animate-scaleIn dropdown-rounded"
           data-lenis-prevent
           style={{ 
             overscrollBehavior: 'contain',
@@ -114,6 +114,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             e.stopPropagation();
           }}
         >
+          <div className="max-h-96 overflow-y-auto custom-scrollbar">
           {loading && results.length === 0 ? (
             <div className="p-4 text-center text-dark-medium">
               Searching...
@@ -235,6 +236,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               )}
             </div>
           ) : null}
+          </div>
         </div>
       )}
     </div>
