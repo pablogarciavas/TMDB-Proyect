@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Header, SearchBar } from './components/common';
 import { MovieListPage, MovieDetail } from './components/movie';
 import { Movie } from './types/movie';
-import { useSmoothScroll } from './hooks/useSmoothScroll';
+import { useSmoothScroll, scrollTo } from './hooks/useSmoothScroll';
 
 function App() {
-  // Enable smooth scroll with momentum
+  // Enable smooth scroll with Lenis
   useSmoothScroll();
   const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
   const [currentView, setCurrentView] = useState<string>('home');
@@ -17,7 +17,7 @@ function App() {
     setCurrentGenre({ id: genreId, name: genreName });
     setCurrentView('genre');
     // Scroll to top when navigating
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollTo(0, { immediate: false });
   };
 
   const handleNavigate = (route: string) => {
@@ -32,7 +32,7 @@ function App() {
       setSelectedMovieId(null);
     }
     // Scroll to top when navigating
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollTo(0, { immediate: false });
   };
 
   const handleMovieSelect = (movie: Movie) => {
