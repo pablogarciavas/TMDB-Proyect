@@ -282,19 +282,6 @@ export const GenreFilters: React.FC<GenreFiltersProps> = ({
                 <span>10</span>
               </div>
             </div>
-            <Select
-              value={filters.rating}
-              onChange={(value) => handleFilterChange('rating', value)}
-              options={[
-                { value: 'all', label: 'Any Rating' },
-                { value: '7', label: '7+' },
-                { value: '7.5', label: '7.5+' },
-                { value: '8', label: '8+' },
-                { value: '8.5', label: '8.5+' },
-                { value: '9', label: '9+' },
-              ]}
-              className="w-full mt-2"
-            />
           </div>
 
           {/* Duración */}
