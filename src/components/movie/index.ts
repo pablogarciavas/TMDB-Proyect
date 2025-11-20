@@ -6,4 +6,5 @@ export { GenreFilters } from './GenreFilters';
 export type { GenreFiltersState } from './GenreFilters';
 export { PersonMoviesPage } from './PersonMoviesPage';
 export { CompanyMoviesPage } from './CompanyMoviesPage';
+export { WatchlistPage } from './WatchlistPage';
 

@@ -1,7 +1,9 @@
 import React from 'react';
 import { Movie } from '../../types/movie';
+import { useWatchlist } from '../../hooks/useWatchlist';
 import { getImageUrl } from '../../services/tmdbApi';
-import { StarIcon, CalendarIcon } from '@heroicons/react/24/outline';
+import { StarIcon, CalendarIcon, BookmarkIcon } from '@heroicons/react/24/outline';
+import { BookmarkIcon as BookmarkIconSolid } from '@heroicons/react/24/solid';
 
 interface MovieCardProps {
   movie: Movie;
@@ -10,8 +12,19 @@ interface MovieCardProps {
 }
 
 export const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick, index = 0 }) => {
+  const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useWatchlist();
+  
   const handleClick = () => {
     onClick?.(movie);
+  };
+
+  const handleWatchlistClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevenir que se active el onClick del card
+    if (isInWatchlist(movie.id)) {
+      removeFromWatchlist(movie.id);
+    } else {
+      addToWatchlist(movie);
+    }
   };
 
   const formatYear = (dateString: string) => {
@@ -39,17 +52,35 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick, index = 0 
       }}
     >
       {/* Poster */}
-      {movie.poster_path ? (
-        <img
-          src={getImageUrl(movie.poster_path, 'w500')}
-          alt={movie.title}
-          className="w-full aspect-[2/3] object-cover"
-        />
-      ) : (
-        <div className="w-full aspect-[2/3] bg-beige-medium flex items-center justify-center">
-          <span className="text-dark-light text-sm">No image</span>
-        </div>
-      )}
+      <div className="relative">
+        {movie.poster_path ? (
+          <img
+            src={getImageUrl(movie.poster_path, 'w500')}
+            alt={movie.title}
+            className="w-full aspect-[2/3] object-cover"
+          />
+        ) : (
+          <div className="w-full aspect-[2/3] bg-beige-medium flex items-center justify-center">
+            <span className="text-dark-light text-sm">No image</span>
+          </div>
+        )}
+        {/* Watchlist Button */}
+        <button
+          onClick={handleWatchlistClick}
+          className={`absolute top-2 right-2 p-2 rounded-full backdrop-blur-sm transition-all ${
+            isInWatchlist(movie.id)
+              ? 'bg-dark/90 text-beige-light'
+              : 'bg-dark/60 text-beige-light hover:bg-dark/80'
+          }`}
+          title={isInWatchlist(movie.id) ? 'Remove from watchlist' : 'Add to watchlist'}
+        >
+          {isInWatchlist(movie.id) ? (
+            <BookmarkIconSolid className="w-5 h-5" />
+          ) : (
+            <BookmarkIcon className="w-5 h-5" />
+          )}
+        </button>
+      </div>
 
       {/* Movie Info */}
       <div className="p-4">
