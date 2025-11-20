@@ -15,7 +15,10 @@ export const DifficultySelector: React.FC<DifficultySelectorProps> = ({
 }) => {
   const [difficulty, setDifficulty] = useState<Difficulty>('easy');
   const [genres, setGenres] = useState<Genre[]>([]);
-  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
+  const [selectedYearRangeEasy, setSelectedYearRangeEasy] = useState<{ start: number; end: number }>({
+    start: 2021,
+    end: 2025,
+  });
   const [selectedYearRange, setSelectedYearRange] = useState<{ start: number; end: number }>({
     start: 2000,
     end: 2010,
@@ -35,11 +38,8 @@ export const DifficultySelector: React.FC<DifficultySelectorProps> = ({
     loadGenres();
   }, []);
 
-  // Generar años disponibles (desde 1900 hasta el año actual)
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: currentYear - 1899 }, (_, i) => currentYear - i);
-
   // Generar rangos de años por décadas
+  const currentYear = new Date().getFullYear();
   const yearRanges: { start: number; end: number; label: string }[] = [];
   for (let start = 1900; start <= currentYear; start += 10) {
     const end = Math.min(start + 9, currentYear);
@@ -61,7 +61,7 @@ export const DifficultySelector: React.FC<DifficultySelectorProps> = ({
     };
 
     if (difficulty === 'easy') {
-      config.year = selectedYear;
+      config.yearRange = selectedYearRangeEasy;
       config.genreId = selectedGenre!;
     } else if (difficulty === 'medium') {
       config.yearRange = selectedYearRange;
@@ -100,14 +100,17 @@ export const DifficultySelector: React.FC<DifficultySelectorProps> = ({
           <>
             <div>
               <label className="block text-sm font-medium text-dark mb-2">
-                Release Year
+                Release Year Range
               </label>
               <Select
-                value={selectedYear.toString()}
-                onChange={(value) => setSelectedYear(parseInt(value))}
-                options={years.map(year => ({
-                  value: year.toString(),
-                  label: year.toString(),
+                value={`${selectedYearRangeEasy.start}-${selectedYearRangeEasy.end}`}
+                onChange={(value) => {
+                  const [start, end] = value.split('-').map(Number);
+                  setSelectedYearRangeEasy({ start, end });
+                }}
+                options={yearRanges.map(range => ({
+                  value: `${range.start}-${range.end}`,
+                  label: range.label,
                 }))}
                 className="w-full"
               />

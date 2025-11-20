@@ -306,10 +306,10 @@ export const useMovieGuessGame = (): UseMovieGuessGameReturn => {
         let movie: Movie | null = null;
 
         if (gameConfig.difficulty === 'easy') {
-          // Fácil: año + género, rating > 7
+          // Fácil: rango de años + género, rating > 7
           const discoverParams: any = {
-            'primary_release_date.gte': `${gameConfig.year}-01-01`,
-            'primary_release_date.lte': `${gameConfig.year}-12-31`,
+            'primary_release_date.gte': `${gameConfig.yearRange!.start}-01-01`,
+            'primary_release_date.lte': `${gameConfig.yearRange!.end}-12-31`,
             with_genres: gameConfig.genreId,
             'vote_average.gte': 7,
             sort_by: 'popularity.desc',
