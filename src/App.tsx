@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Header, SearchBar } from './components/common';
-import { MovieListPage, MovieDetail, PersonMoviesPage, CompanyMoviesPage, WatchlistPage, UpcomingPage } from './components/movie';
+import { MovieListPage, MovieDetail, PersonMoviesPage, CompanyMoviesPage, WatchlistPage, UpcomingPage, MovieGuessGame } from './components/movie';
 import { Movie } from './types/movie';
 import { Person } from './types/person';
 import { Company } from './types/company';
@@ -117,11 +117,11 @@ function App() {
     <div className="min-h-screen bg-beige flex flex-col">
       <Header onGenreSelect={handleGenreSelect} onNavigate={handleNavigate} />
       
-      <main className={`flex-1 ${currentView === 'home' ? 'flex items-center justify-center' : ''}`}>
+      <main className={`flex-1 ${currentView === 'home' ? 'flex items-start justify-center pt-48' : ''}`}>
         <div className="container-elegant w-full">
           {currentView === 'home' && (
-            <div className="flex flex-col items-center justify-center min-h-[60vh]">
-              {/* Search bar centered vertically */}
+            <div className="flex flex-col items-center justify-start pt-20">
+              {/* Search bar positioned higher */}
               <div className="w-full max-w-2xl mx-auto animate-fadeInUp opacity-0" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
                 <SearchBar 
                   onMovieSelect={handleMovieSelect}
@@ -183,14 +183,7 @@ function App() {
               )}
 
               {currentView === 'minigame' && (
-                <div className="text-center py-12">
-                  <h2 className="text-2xl md:text-3xl font-bold text-dark mb-4">
-                    Minigame
-                  </h2>
-                  <p className="text-dark-medium">
-                    Feature in development...
-                  </p>
-                </div>
+                <MovieGuessGame />
               )}
 
             </div>
