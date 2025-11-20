@@ -117,11 +117,11 @@ function App() {
     <div className="min-h-screen bg-beige flex flex-col">
       <Header onGenreSelect={handleGenreSelect} onNavigate={handleNavigate} />
       
-      <main className={`flex-1 ${currentView === 'home' ? 'flex items-center justify-center' : ''}`}>
+      <main className={`flex-1 ${currentView === 'home' ? 'flex items-start justify-center pt-48' : ''}`}>
         <div className="container-elegant w-full">
           {currentView === 'home' && (
-            <div className="flex flex-col items-center justify-center min-h-[60vh]">
-              {/* Search bar centered vertically */}
+            <div className="flex flex-col items-center justify-start pt-20">
+              {/* Search bar positioned higher */}
               <div className="w-full max-w-2xl mx-auto animate-fadeInUp opacity-0" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
                 <SearchBar 
                   onMovieSelect={handleMovieSelect}
