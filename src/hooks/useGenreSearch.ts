@@ -4,10 +4,10 @@ import { Movie } from '../types/movie';
 import { Person } from '../types/person';
 import { Company } from '../types/company';
 
-export type SearchResultType = 'movie' | 'person' | 'company';
+export type GenreSearchResultType = 'movie' | 'person' | 'company';
 
-export interface SearchResult {
-  type: SearchResultType;
+export interface GenreSearchResult {
+  type: GenreSearchResultType;
   id: number;
   title: string;
   subtitle?: string;
@@ -15,41 +15,30 @@ export interface SearchResult {
   data: Movie | Person | Company;
 }
 
-export const useSearch = () => {
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState<SearchResult[]>([]);
+interface UseGenreSearchOptions {
+  genreId: number | null;
+}
+
+export const useGenreSearch = (options: UseGenreSearchOptions & { query?: string } = { genreId: null }) => {
+  const { genreId, query: externalQuery } = options;
+  const [results, setResults] = useState<GenreSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
 
   const searchAll = useCallback(async (searchQuery: string) => {
     if (!searchQuery.trim()) {
       setResults([]);
-      setIsOpen(false);
       return;
     }
 
     setLoading(true);
     try {
-      // Buscar en paralelo: películas, personas y compañías
-      const [moviesResponse, peopleResponse, companiesResponse] = await Promise.all([
-        tmdbApi.searchMovies(searchQuery, 1),
+      // Buscar solo personas y compañías (las películas se manejan por separado)
+      const [peopleResponse, companiesResponse] = await Promise.all([
         tmdbApi.searchPeople(searchQuery, 1),
         tmdbApi.searchCompanies(searchQuery, 1),
       ]);
 
-      const allResults: SearchResult[] = [];
-
-      // Agregar películas (máximo 3)
-      moviesResponse.results.slice(0, 3).forEach((movie) => {
-        allResults.push({
-          type: 'movie',
-          id: movie.id,
-          title: movie.title,
-          subtitle: movie.release_date ? new Date(movie.release_date).getFullYear().toString() : undefined,
-          image: movie.poster_path,
-          data: movie,
-        });
-      });
+      const allResults: GenreSearchResult[] = [];
 
       // Agregar personas (máximo 3)
       peopleResponse.results.slice(0, 3).forEach((person) => {
@@ -76,7 +65,6 @@ export const useSearch = () => {
       });
 
       setResults(allResults);
-      setIsOpen(true);
     } catch (error) {
       console.error('Error en búsqueda:', error);
       setResults([]);
@@ -86,24 +74,21 @@ export const useSearch = () => {
   }, []);
 
   useEffect(() => {
+    if (!externalQuery) {
+      setResults([]);
+      return;
+    }
+
     const timeoutId = setTimeout(() => {
-      if (query) {
-        searchAll(query);
-      } else {
-        setResults([]);
-        setIsOpen(false);
-      }
+      searchAll(externalQuery);
     }, 300); // Debounce de 300ms
 
     return () => clearTimeout(timeoutId);
-  }, [query, searchAll]);
+  }, [externalQuery, searchAll]);
 
   return {
-    query,
-    setQuery,
     results,
     loading,
-    isOpen,
-    setIsOpen,
   };
 };
+

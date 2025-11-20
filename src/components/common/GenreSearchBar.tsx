@@ -1,25 +1,27 @@
 import React, { useRef, useEffect } from 'react';
-import { useSearch, SearchResult } from '../../hooks/useSearch';
+import { useGenreSearch, GenreSearchResult } from '../../hooks/useGenreSearch';
 import { Movie } from '../../types/movie';
 import { Person } from '../../types/person';
 import { Company } from '../../types/company';
 import { getImageUrl } from '../../services/tmdbApi';
 import { MagnifyingGlassIcon, FilmIcon, UserIcon, BuildingOfficeIcon } from '@heroicons/react/24/outline';
 
-interface SearchBarProps {
+interface GenreSearchBarProps {
+  genreId: number | null;
   onMovieSelect?: (movie: Movie) => void;
   onPersonSelect?: (person: Person) => void;
   onCompanySelect?: (company: Company) => void;
   placeholder?: string;
 }
 
-export const SearchBar: React.FC<SearchBarProps> = ({
+export const GenreSearchBar: React.FC<GenreSearchBarProps> = ({
+  genreId,
   onMovieSelect,
   onPersonSelect,
   onCompanySelect,
   placeholder = "Search movies, actors, directors, studios..."
 }) => {
-  const { query, setQuery, results, loading, isOpen, setIsOpen } = useSearch();
+  const { query, setQuery, results, loading, isOpen, setIsOpen } = useGenreSearch({ genreId });
   const searchRef = useRef<HTMLDivElement>(null);
 
   // Cerrar dropdown al hacer click fuera
@@ -34,7 +36,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [setIsOpen]);
 
-  const handleResultClick = (result: SearchResult) => {
+  const handleResultClick = (result: GenreSearchResult) => {
     setIsOpen(false);
     setQuery('');
     
@@ -47,7 +49,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     }
   };
 
-  const getIcon = (type: SearchResult['type']) => {
+  const getIcon = (type: GenreSearchResult['type']) => {
     switch (type) {
       case 'movie':
         return <FilmIcon className="w-4 h-4" />;
@@ -58,7 +60,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     }
   };
 
-  const getTypeLabel = (type: SearchResult['type']) => {
+  const getTypeLabel = (type: GenreSearchResult['type']) => {
     switch (type) {
       case 'movie':
         return 'Movie';
@@ -77,7 +79,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <div ref={searchRef} className="relative w-full max-w-2xl mx-auto">
+    <div ref={searchRef} className="relative w-full">
       <div className="relative">
         <input
           type="text"
@@ -85,7 +87,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => query && setIsOpen(true)}
           placeholder={placeholder}
-          className="input pr-12 text-lg py-4 md:py-5 w-full rounded-2xl"
+          className="input pr-12 w-full"
         />
         <div className="absolute right-3 top-1/2 -translate-y-1/2">
           {loading ? (
@@ -106,11 +108,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             WebkitOverflowScrolling: 'touch'
           }}
           onWheel={(e) => {
-            // Prevenir que el scroll del dropdown afecte el scroll de la página
             e.stopPropagation();
           }}
           onTouchMove={(e) => {
-            // Permitir scroll táctil en el dropdown
             e.stopPropagation();
           }}
         >
@@ -240,3 +240,4 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     </div>
   );
 };
+
