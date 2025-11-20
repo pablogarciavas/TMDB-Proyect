@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Header, SearchBar } from './components/common';
-import { MovieListPage, MovieDetail } from './components/movie';
+import { MovieListPage, MovieDetail, PersonMoviesPage, CompanyMoviesPage } from './components/movie';
 import { Movie } from './types/movie';
+import { Person } from './types/person';
+import { Company } from './types/company';
 import { useSmoothScroll, scrollTo } from './hooks/useSmoothScroll';
 
 function App() {
@@ -10,6 +12,8 @@ function App() {
   const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
   const [currentView, setCurrentView] = useState<string>('home');
   const [currentGenre, setCurrentGenre] = useState<{ id: number; name: string } | null>(null);
+  const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
+  const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
 
   const handleGenreSelect = (genreId: number, genreName: string) => {
     console.log('Genre selected:', genreId, genreName);
@@ -26,10 +30,14 @@ function App() {
       setCurrentView('home');
       setCurrentGenre(null);
       setSelectedMovieId(null);
+      setSelectedPerson(null);
+      setSelectedCompany(null);
     } else {
       setCurrentView(route);
       setCurrentGenre(null);
       setSelectedMovieId(null);
+      setSelectedPerson(null);
+      setSelectedCompany(null);
     }
     // Scroll to top when navigating
     scrollTo(0, { immediate: false });
@@ -39,20 +47,70 @@ function App() {
     console.log('Movie selected:', movie);
     setSelectedMovieId(movie.id);
     setCurrentView('movie-detail');
-    // Scroll to top when navigating to movie detail
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setSelectedPerson(null);
+    setSelectedCompany(null);
+    scrollTo(0, { immediate: false });
+  };
+
+  const handlePersonSelect = (person: Person) => {
+    console.log('Person selected:', person);
+    setSelectedPerson(person);
+    setCurrentView('person-movies');
+    setSelectedMovieId(null);
+    setSelectedCompany(null);
+    // Mantener el género actual si estamos en la vista de género
+    scrollTo(0, { immediate: false });
+  };
+
+  const handleCompanySelect = (company: Company) => {
+    console.log('Company selected:', company);
+    setSelectedCompany(company);
+    setCurrentView('company-movies');
+    setSelectedMovieId(null);
+    setSelectedPerson(null);
+    scrollTo(0, { immediate: false });
   };
 
   const handleBackFromDetail = () => {
+    setSelectedMovieId(null);
+    // Mantener la vista actual (genre, person-movies, company-movies, etc.)
+    // Solo cambiar si estamos en movie-detail sin contexto
+    if (currentView === 'movie-detail') {
+      if (currentGenre) {
+        setCurrentView('genre');
+      } else if (selectedPerson) {
+        setCurrentView('person-movies');
+      } else if (selectedCompany) {
+        setCurrentView('company-movies');
+      } else {
+        setCurrentView('home');
+      }
+    }
+    scrollTo(0, { immediate: false });
+  };
+
+  const handleBackFromPerson = () => {
+    // Si veníamos de un género, volver al género
     if (currentGenre) {
       setCurrentView('genre');
-      setSelectedMovieId(null);
+      setSelectedPerson(null);
     } else {
       setCurrentView('home');
-      setSelectedMovieId(null);
+      setSelectedPerson(null);
     }
-    // Scroll to top when going back
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollTo(0, { immediate: false });
+  };
+
+  const handleBackFromCompany = () => {
+    // Si veníamos de un género, volver al género
+    if (currentGenre) {
+      setCurrentView('genre');
+      setSelectedCompany(null);
+    } else {
+      setCurrentView('home');
+      setSelectedCompany(null);
+    }
+    scrollTo(0, { immediate: false });
   };
 
   return (
@@ -62,18 +120,16 @@ function App() {
       <main className={`flex-1 ${currentView === 'home' ? 'flex items-center justify-center' : ''}`}>
         <div className="container-elegant w-full">
           {currentView === 'home' && (
-            <>
+            <div className="flex flex-col items-center justify-center min-h-[60vh]">
               {/* Search bar centered vertically */}
-              <div className="animate-fadeInUp opacity-0" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
-                <SearchBar onMovieSelect={handleMovieSelect} />
+              <div className="w-full max-w-2xl mx-auto animate-fadeInUp opacity-0" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
+                <SearchBar 
+                  onMovieSelect={handleMovieSelect}
+                  onPersonSelect={handlePersonSelect}
+                  onCompanySelect={handleCompanySelect}
+                />
               </div>
-              
-              <div className="text-center mt-8 animate-fadeInUp opacity-0" style={{ animationDelay: '0.4s', animationFillMode: 'forwards' }}>
-                <p className="text-dark-medium text-lg md:text-xl max-w-2xl mx-auto">
-                  Search for your favorite movie in the search bar
-                </p>
-              </div>
-            </>
+            </div>
           )}
 
           {/* Contenido de otras vistas */}
@@ -93,6 +149,28 @@ function App() {
                   genreId={currentGenre.id}
                   genreName={currentGenre.name}
                   onMovieClick={handleMovieSelect}
+                  onPersonSelect={handlePersonSelect}
+                  onCompanySelect={handleCompanySelect}
+                />
+              )}
+
+              {currentView === 'person-movies' && selectedPerson && !selectedMovieId && (
+                <PersonMoviesPage
+                  person={selectedPerson}
+                  genreId={currentGenre?.id || null}
+                  genreName={currentGenre?.name}
+                  onMovieClick={handleMovieSelect}
+                  onBack={handleBackFromPerson}
+                />
+              )}
+
+              {currentView === 'company-movies' && selectedCompany && !selectedMovieId && (
+                <CompanyMoviesPage
+                  company={selectedCompany}
+                  genreId={currentGenre?.id || null}
+                  genreName={currentGenre?.name}
+                  onMovieClick={handleMovieSelect}
+                  onBack={handleBackFromCompany}
                 />
               )}
 

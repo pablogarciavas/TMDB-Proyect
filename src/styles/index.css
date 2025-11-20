@@ -33,6 +33,18 @@
   .lenis.lenis-scrolling iframe {
     pointer-events: none;
   }
+
+  /* Permitir scroll en dropdowns y elementos con overflow */
+  [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+  
+  /* Asegurar que los dropdowns puedan hacer scroll */
+  .overflow-y-auto,
+  .overflow-y-scroll {
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
   
   img {
     @apply border-0;

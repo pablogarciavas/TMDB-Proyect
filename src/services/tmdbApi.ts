@@ -2,6 +2,8 @@ import axios from 'axios';
 import { MovieResponse, Movie } from '../types/movie';
 import { GenreResponse } from '../types/genre';
 import { MovieDetails, Credits, WatchProviders, Videos } from '../types/movieDetails';
+import { PersonResponse, Person, PersonDetails, PersonMovieCredits } from '../types/person';
+import { CompanyResponse, Company, CompanyDetails } from '../types/company';
 import { TMDB_CONFIG } from '../utils/constants';
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -102,6 +104,52 @@ export const tmdbApi = {
   getUpcomingMovies: async (page: number = 1): Promise<MovieResponse> => {
     const { data } = await api.get<MovieResponse>('/movie/upcoming', {
       params: { page },
+    });
+    return data;
+  },
+
+  // Buscar personas (actores, directores, etc.)
+  searchPeople: async (query: string, page: number = 1): Promise<PersonResponse> => {
+    const { data } = await api.get<PersonResponse>('/search/person', {
+      params: { query, page },
+    });
+    return data;
+  },
+
+  // Obtener detalles de una persona
+  getPersonDetails: async (id: number): Promise<PersonDetails> => {
+    const { data } = await api.get<PersonDetails>(`/person/${id}`);
+    return data;
+  },
+
+  // Obtener películas de una persona (cast y crew)
+  getPersonMovieCredits: async (id: number): Promise<PersonMovieCredits> => {
+    const { data } = await api.get<PersonMovieCredits>(`/person/${id}/movie_credits`);
+    return data;
+  },
+
+  // Buscar compañías (estudios)
+  searchCompanies: async (query: string, page: number = 1): Promise<CompanyResponse> => {
+    const { data } = await api.get<CompanyResponse>('/search/company', {
+      params: { query, page },
+    });
+    return data;
+  },
+
+  // Obtener detalles de una compañía
+  getCompanyDetails: async (id: number): Promise<CompanyDetails> => {
+    const { data } = await api.get<CompanyDetails>(`/company/${id}`);
+    return data;
+  },
+
+  // Obtener películas de una compañía
+  getCompanyMovies: async (companyId: number, page: number = 1): Promise<MovieResponse> => {
+    const { data } = await api.get<MovieResponse>('/discover/movie', {
+      params: {
+        with_companies: companyId,
+        page,
+        sort_by: 'popularity.desc',
+      },
     });
     return data;
   },
