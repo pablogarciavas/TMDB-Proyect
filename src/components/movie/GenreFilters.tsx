@@ -5,6 +5,7 @@ import { getImageUrl } from '../../services/tmdbApi';
 import { Movie } from '../../types/movie';
 import { Person } from '../../types/person';
 import { Company } from '../../types/company';
+import { Select } from '../ui/Select';
 
 export interface GenreFiltersState {
   searchQuery: string;
@@ -105,7 +106,7 @@ export const GenreFilters: React.FC<GenreFiltersProps> = ({
   };
 
   return (
-    <div className="mb-8 space-y-4">
+    <div className="mb-8 space-y-4 relative z-50">
       {/* Barra de búsqueda de películas, actores, directores y estudios */}
       <div className="relative">
         <input
@@ -225,20 +226,21 @@ export const GenreFilters: React.FC<GenreFiltersProps> = ({
             <label className="block text-sm font-medium text-dark mb-2">
               Sort By
             </label>
-            <select
+            <Select
               value={filters.sortBy}
-              onChange={(e) => handleFilterChange('sortBy', e.target.value)}
-              className="input w-full"
-            >
-              <option value="popularity.desc">Popularity (High to Low)</option>
-              <option value="popularity.asc">Popularity (Low to High)</option>
-              <option value="vote_average.desc">Rating (High to Low)</option>
-              <option value="vote_average.asc">Rating (Low to High)</option>
-              <option value="release_date.desc">Release Date (Newest)</option>
-              <option value="release_date.asc">Release Date (Oldest)</option>
-              <option value="title.asc">Title (A-Z)</option>
-              <option value="title.desc">Title (Z-A)</option>
-            </select>
+              onChange={(value) => handleFilterChange('sortBy', value)}
+              options={[
+                { value: 'popularity.desc', label: 'Popularity (High to Low)' },
+                { value: 'popularity.asc', label: 'Popularity (Low to High)' },
+                { value: 'vote_average.desc', label: 'Rating (High to Low)' },
+                { value: 'vote_average.asc', label: 'Rating (Low to High)' },
+                { value: 'release_date.desc', label: 'Release Date (Newest)' },
+                { value: 'release_date.asc', label: 'Release Date (Oldest)' },
+                { value: 'title.asc', label: 'Title (A-Z)' },
+                { value: 'title.desc', label: 'Title (Z-A)' },
+              ]}
+              className="w-full"
+            />
           </div>
 
           {/* Año de lanzamiento */}
@@ -246,17 +248,15 @@ export const GenreFilters: React.FC<GenreFiltersProps> = ({
             <label className="block text-sm font-medium text-dark mb-2">
               Release Year
             </label>
-            <select
+            <Select
               value={filters.year}
-              onChange={(e) => handleFilterChange('year', e.target.value)}
-              className="input w-full"
-            >
-              {yearRanges.map((range) => (
-                <option key={range.value} value={range.value}>
-                  {range.label}
-                </option>
-              ))}
-            </select>
+              onChange={(value) => handleFilterChange('year', value)}
+              options={yearRanges.map((range) => ({
+                value: range.value,
+                label: range.label,
+              }))}
+              className="w-full"
+            />
           </div>
 
           {/* Valoración mínima */}
@@ -282,18 +282,19 @@ export const GenreFilters: React.FC<GenreFiltersProps> = ({
                 <span>10</span>
               </div>
             </div>
-            <select
+            <Select
               value={filters.rating}
-              onChange={(e) => handleFilterChange('rating', e.target.value)}
-              className="input w-full mt-2"
-            >
-              <option value="all">Any Rating</option>
-              <option value="7">7+</option>
-              <option value="7.5">7.5+</option>
-              <option value="8">8+</option>
-              <option value="8.5">8.5+</option>
-              <option value="9">9+</option>
-            </select>
+              onChange={(value) => handleFilterChange('rating', value)}
+              options={[
+                { value: 'all', label: 'Any Rating' },
+                { value: '7', label: '7+' },
+                { value: '7.5', label: '7.5+' },
+                { value: '8', label: '8+' },
+                { value: '8.5', label: '8.5+' },
+                { value: '9', label: '9+' },
+              ]}
+              className="w-full mt-2"
+            />
           </div>
 
           {/* Duración */}
@@ -301,17 +302,18 @@ export const GenreFilters: React.FC<GenreFiltersProps> = ({
             <label className="block text-sm font-medium text-dark mb-2">
               Duration
             </label>
-            <select
+            <Select
               value={filters.duration}
-              onChange={(e) => handleFilterChange('duration', e.target.value)}
-              className="input w-full"
-            >
-              <option value="all">Any Duration</option>
-              <option value="short">Short (&lt; 90 min)</option>
-              <option value="medium">Medium (90-120 min)</option>
-              <option value="long">Long (120-150 min)</option>
-              <option value="very-long">Very Long (&gt; 150 min)</option>
-            </select>
+              onChange={(value) => handleFilterChange('duration', value)}
+              options={[
+                { value: 'all', label: 'Any Duration' },
+                { value: 'short', label: 'Short (< 90 min)' },
+                { value: 'medium', label: 'Medium (90-120 min)' },
+                { value: 'long', label: 'Long (120-150 min)' },
+                { value: 'very-long', label: 'Very Long (> 150 min)' },
+              ]}
+              className="w-full"
+            />
           </div>
         </div>
       )}

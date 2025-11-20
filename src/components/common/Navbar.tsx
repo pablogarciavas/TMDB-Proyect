@@ -71,8 +71,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onGenreSelect, onNavigate }) => 
   };
 
   const navItems = [
-    { id: 'top-rated', label: 'Top Rated' },
-    { id: 'favorites', label: 'Favorites' },
     { id: 'watchlist', label: 'Watchlist' },
     { id: 'upcoming', label: 'Upcoming' },
     { id: 'minigame', label: 'Minigame' },

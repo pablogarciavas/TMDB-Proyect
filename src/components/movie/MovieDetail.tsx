@@ -1,5 +1,6 @@
 import React from 'react';
 import { useMovieDetails } from '../../hooks/useMovieDetails';
+import { useWatchlist } from '../../hooks/useWatchlist';
 import { Movie } from '../../types/movie';
 import { Loading } from '../ui/Loading';
 import { ErrorMessage } from '../ui/ErrorMessage';
@@ -12,8 +13,10 @@ import {
   FilmIcon,
   UserGroupIcon,
   LanguageIcon,
-  BuildingOfficeIcon
+  BuildingOfficeIcon,
+  BookmarkIcon
 } from '@heroicons/react/24/outline';
+import { BookmarkIcon as BookmarkIconSolid } from '@heroicons/react/24/solid';
 
 interface MovieDetailProps {
   movieId: number;
@@ -27,6 +30,7 @@ export const MovieDetail: React.FC<MovieDetailProps> = ({
   onMovieClick,
 }) => {
   const { movie, credits, watchProviders, videos, similarMovies, loading, error } = useMovieDetails(movieId);
+  const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useWatchlist();
 
   if (loading) {
     return (
@@ -118,7 +122,7 @@ export const MovieDetail: React.FC<MovieDetailProps> = ({
             {movie.tagline && (
               <p className="text-lg md:text-xl text-dark-medium italic mb-6">"{movie.tagline}"</p>
             )}
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3 mb-4">
               <span className="flex items-center gap-1.5 px-4 py-2 bg-dark text-beige-light rounded-xl font-medium">
                 <StarIcon className="w-5 h-5" />
                 {movie.vote_average.toFixed(1)}
@@ -134,6 +138,33 @@ export const MovieDetail: React.FC<MovieDetailProps> = ({
                 </span>
               )}
             </div>
+            {/* Watchlist Button */}
+            <button
+              onClick={() => {
+                if (isInWatchlist(movie.id)) {
+                  removeFromWatchlist(movie.id);
+                } else {
+                  addToWatchlist(movie);
+                }
+              }}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors ${
+                isInWatchlist(movie.id)
+                  ? 'bg-dark text-beige-light hover:bg-dark/90'
+                  : 'bg-beige-medium text-dark hover:bg-beige'
+              }`}
+            >
+              {isInWatchlist(movie.id) ? (
+                <>
+                  <BookmarkIconSolid className="w-5 h-5" />
+                  <span>In Watchlist</span>
+                </>
+              ) : (
+                <>
+                  <BookmarkIcon className="w-5 h-5" />
+                  <span>Add to Watchlist</span>
+                </>
+              )}
+            </button>
           </div>
 
           {/* Overview */}
