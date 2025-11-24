@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Difficulty, GameConfig } from '../../hooks/useMovieGuessGame';
-import { tmdbApi } from '../../services/tmdbApi';
-import { Genre } from '../../types/genre';
+import { useGenres } from '../../contexts/GenresContext';
 import { Select } from '../ui/Select';
 
 interface DifficultySelectorProps {
@@ -14,7 +13,7 @@ export const DifficultySelector: React.FC<DifficultySelectorProps> = ({
   loading = false,
 }) => {
   const [difficulty, setDifficulty] = useState<Difficulty>('easy');
-  const [genres, setGenres] = useState<Genre[]>([]);
+  const { genres: allGenres } = useGenres();
   const [selectedYearRangeEasy, setSelectedYearRangeEasy] = useState<{ start: number; end: number }>({
     start: 2021,
     end: 2025,
@@ -25,18 +24,10 @@ export const DifficultySelector: React.FC<DifficultySelectorProps> = ({
   });
   const [selectedGenre, setSelectedGenre] = useState<number | null>(null);
 
-  // Cargar géneros
-  useEffect(() => {
-    const loadGenres = async () => {
-      try {
-        const response = await tmdbApi.getGenres();
-        setGenres(response.genres.sort((a, b) => a.name.localeCompare(b.name)));
-      } catch (error) {
-        console.error('Error loading genres:', error);
-      }
-    };
-    loadGenres();
-  }, []);
+  // Ordenar géneros alfabéticamente
+  const genres = useMemo(() => {
+    return [...allGenres].sort((a, b) => a.name.localeCompare(b.name));
+  }, [allGenres]);
 
   // Generar rangos de años por décadas
   const currentYear = new Date().getFullYear();

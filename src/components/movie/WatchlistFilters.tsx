@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { MagnifyingGlassIcon, FunnelIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { WatchlistMovie } from '../../contexts/WatchlistContext';
-import { tmdbApi } from '../../services/tmdbApi';
+import { useGenres } from '../../contexts/GenresContext';
 import { Genre } from '../../types/genre';
 import { Select, SelectOption } from '../ui/Select';
 
@@ -27,20 +27,7 @@ export const WatchlistFilters: React.FC<WatchlistFiltersProps> = ({
   totalResults,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [genres, setGenres] = useState<Genre[]>([]);
-
-  // Cargar géneros desde la API
-  useEffect(() => {
-    const loadGenres = async () => {
-      try {
-        const response = await tmdbApi.getGenres();
-        setGenres(response.genres);
-      } catch (error) {
-        console.error('Error loading genres:', error);
-      }
-    };
-    loadGenres();
-  }, []);
+  const { genres } = useGenres();
 
   const handleFilterChange = (key: keyof WatchlistFiltersState, value: string) => {
     onFiltersChange({

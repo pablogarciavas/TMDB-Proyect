@@ -53,7 +53,7 @@ export const MovieListPage: React.FC<MovieListPageProps> = ({
 
     return () => clearTimeout(timeoutId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters, genreId]);
+  }, [filters.searchQuery, filters.sortBy, filters.year, filters.rating, filters.duration, genreId]);
 
   return (
     <div className="w-full py-8 relative z-10">

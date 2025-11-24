@@ -141,6 +141,7 @@ function App() {
                   movieId={selectedMovieId}
                   onBack={handleBackFromDetail}
                   onMovieClick={handleMovieSelect}
+                  onPersonSelect={handlePersonSelect}
                 />
               )}
 

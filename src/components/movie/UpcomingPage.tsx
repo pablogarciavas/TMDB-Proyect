@@ -36,7 +36,7 @@ export const UpcomingPage: React.FC<UpcomingPageProps> = ({
 
     return () => clearTimeout(timeoutId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters]);
+  }, [filters.searchQuery, filters.sortBy, filters.genre]);
 
   return (
     <div className="w-full py-8 relative z-10">

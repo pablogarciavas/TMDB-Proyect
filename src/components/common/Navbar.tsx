@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { tmdbApi } from '../../services/tmdbApi';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { useGenres } from '../../contexts/GenresContext';
 import { Genre } from '../../types/genre';
 
 interface NavbarProps {
@@ -8,45 +8,38 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ onGenreSelect, onNavigate }) => {
-  const [genres, setGenres] = useState<Genre[]>([]);
+  const { genres: allGenres } = useGenres();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const loadGenres = async () => {
-      try {
-        const response = await tmdbApi.getGenres();
-        // Sort genres alphabetically
-        const sortedGenres = response.genres.sort((a, b) => 
-          a.name.localeCompare(b.name, 'en')
-        );
-        
-        // Reorganize genres to fill columns first (column-major order)
-        // 5 columns, 4 rows = 20 slots, but we have 19 genres
-        // We want: Col1: [0,1,2,3], Col2: [4,5,6,7], Col3: [8,9,10,11], etc.
-        const columns = 5;
-        const rows = 4;
-        const reorganizedGenres: Genre[] = [];
-        
-        // Fill by columns: for each column, add genres row by row
-        // Index calculation: col * rows + row (not row * columns + col)
-        for (let col = 0; col < columns; col++) {
-          for (let row = 0; row < rows; row++) {
-            const index = col * rows + row;
-            if (index < sortedGenres.length) {
-              reorganizedGenres.push(sortedGenres[index]);
-            }
-          }
+  // Reorganizar géneros para llenar columnas primero (column-major order)
+  const genres = useMemo(() => {
+    if (allGenres.length === 0) return [];
+    
+    // Sort genres alphabetically
+    const sortedGenres = [...allGenres].sort((a, b) => 
+      a.name.localeCompare(b.name, 'en')
+    );
+    
+    // 5 columns, 4 rows = 20 slots, but we have 19 genres
+    // We want: Col1: [0,1,2,3], Col2: [4,5,6,7], Col3: [8,9,10,11], etc.
+    const columns = 5;
+    const rows = 4;
+    const reorganizedGenres: Genre[] = [];
+    
+    // Fill by columns: for each column, add genres row by row
+    // Index calculation: col * rows + row (not row * columns + col)
+    for (let col = 0; col < columns; col++) {
+      for (let row = 0; row < rows; row++) {
+        const index = col * rows + row;
+        if (index < sortedGenres.length) {
+          reorganizedGenres.push(sortedGenres[index]);
         }
-        
-        setGenres(reorganizedGenres);
-        console.log('Total genres loaded:', reorganizedGenres.length);
-      } catch (error) {
-        console.error('Error loading genres:', error);
       }
-    };
-    loadGenres();
-  }, []);
+    }
+    
+    return reorganizedGenres;
+  }, [allGenres]);
 
   // Cerrar dropdown al hacer click fuera
   useEffect(() => {

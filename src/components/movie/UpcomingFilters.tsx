@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { MagnifyingGlassIcon, FunnelIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { tmdbApi } from '../../services/tmdbApi';
-import { Genre } from '../../types/genre';
+import { useGenres } from '../../contexts/GenresContext';
 import { Select } from '../ui/Select';
 
 export interface UpcomingFiltersState {
@@ -22,20 +21,7 @@ export const UpcomingFilters: React.FC<UpcomingFiltersProps> = ({
   totalResults,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [genres, setGenres] = useState<Genre[]>([]);
-
-  // Cargar géneros desde la API
-  useEffect(() => {
-    const loadGenres = async () => {
-      try {
-        const response = await tmdbApi.getGenres();
-        setGenres(response.genres);
-      } catch (error) {
-        console.error('Error loading genres:', error);
-      }
-    };
-    loadGenres();
-  }, []);
+  const { genres } = useGenres();
 
   const handleFilterChange = (key: keyof UpcomingFiltersState, value: string) => {
     onFiltersChange({

@@ -47,7 +47,8 @@ export const GenreFilters: React.FC<GenreFiltersProps> = ({
       r => r.type === 'person' || r.type === 'company'
     );
     setShowSuggestions(filters.searchQuery.trim() !== '' && hasPeopleOrCompanies);
-  }, [filters.searchQuery, searchResults]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters.searchQuery, searchResults.length]);
 
   const handleFilterChange = (key: keyof GenreFiltersState, value: string) => {
     onFiltersChange({
