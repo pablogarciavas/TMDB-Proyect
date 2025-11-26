@@ -108,7 +108,7 @@ export const WatchlistPage: React.FC<WatchlistPageProps> = ({
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-dark mb-2">
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-dark mb-2">
               Watchlist
             </h1>
             {watchlist.length > 0 && (

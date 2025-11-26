@@ -102,7 +102,7 @@ export const MovieDetail: React.FC<MovieDetailProps> = ({
     <div className="w-full animate-fadeIn">
       {/* Backdrop Header */}
       {movie.backdrop_path && (
-        <div className="relative w-full h-[400px] md:h-[500px] mb-8 rounded-t-2xl overflow-hidden">
+        <div className="relative w-full h-[250px] md:h-[400px] lg:h-[500px] mb-6 md:mb-8 rounded-t-2xl overflow-hidden">
           <img
             src={getImageUrl(movie.backdrop_path, 'w1280')}
             alt={movie.title}
@@ -114,38 +114,38 @@ export const MovieDetail: React.FC<MovieDetailProps> = ({
           {onBack && (
             <button
               onClick={onBack}
-              className="absolute top-4 left-4 px-4 py-2 bg-dark/80 text-beige-light rounded-xl hover:bg-dark transition-colors backdrop-blur-sm flex items-center gap-2"
+              className="absolute top-3 left-3 md:top-4 md:left-4 px-3 py-1.5 md:px-4 md:py-2 bg-dark/80 text-beige-light rounded-xl hover:bg-dark transition-colors backdrop-blur-sm flex items-center gap-1.5 md:gap-2 text-sm md:text-base"
             >
-              <ArrowLeftIcon className="w-5 h-5" />
+              <ArrowLeftIcon className="w-4 h-4 md:w-5 md:h-5" />
               Back
             </button>
           )}
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
         {/* Left Column - Main Content */}
-        <div className="lg:col-span-2 space-y-8">
+        <div className="lg:col-span-2 space-y-4 md:space-y-6 lg:space-y-8">
           {/* Title and Basic Info */}
-          <div className="bg-beige-light/50 rounded-2xl p-6 md:p-8 border border-beige-medium/30">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-dark mb-3">
+          <div className="bg-beige-light/50 rounded-2xl p-4 md:p-6 lg:p-8 border border-beige-medium/30">
+            <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-dark mb-2 md:mb-3">
               {movie.title}
             </h1>
             {movie.tagline && (
-              <p className="text-lg md:text-xl text-dark-medium italic mb-6">"{movie.tagline}"</p>
+              <p className="text-base md:text-lg lg:text-xl text-dark-medium italic mb-4 md:mb-6">"{movie.tagline}"</p>
             )}
-            <div className="flex flex-wrap items-center gap-3 mb-4">
-              <span className="flex items-center gap-1.5 px-4 py-2 bg-dark text-beige-light rounded-xl font-medium">
-                <StarIcon className="w-5 h-5" />
+            <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-3 md:mb-4">
+              <span className="flex items-center gap-1 md:gap-1.5 px-3 py-1.5 md:px-4 md:py-2 bg-dark text-beige-light rounded-xl font-medium text-sm md:text-base">
+                <StarIcon className="w-4 h-4 md:w-5 md:h-5" />
                 {movie.vote_average.toFixed(1)}
               </span>
-              <span className="flex items-center gap-1.5 px-4 py-2 bg-beige-medium/50 text-dark rounded-xl">
-                <CalendarIcon className="w-5 h-5" />
+              <span className="flex items-center gap-1 md:gap-1.5 px-3 py-1.5 md:px-4 md:py-2 bg-beige-medium/50 text-dark rounded-xl text-sm md:text-base">
+                <CalendarIcon className="w-4 h-4 md:w-5 md:h-5" />
                 {formatDate(movie.release_date)}
               </span>
               {movie.runtime > 0 && (
-                <span className="flex items-center gap-1.5 px-4 py-2 bg-beige-medium/50 text-dark rounded-xl">
-                  <ClockIcon className="w-5 h-5" />
+                <span className="flex items-center gap-1 md:gap-1.5 px-3 py-1.5 md:px-4 md:py-2 bg-beige-medium/50 text-dark rounded-xl text-sm md:text-base">
+                  <ClockIcon className="w-4 h-4 md:w-5 md:h-5" />
                   {formatRuntime(movie.runtime)}
                 </span>
               )}
@@ -181,20 +181,20 @@ export const MovieDetail: React.FC<MovieDetailProps> = ({
 
           {/* Overview */}
           {movie.overview && (
-            <div className="bg-beige-light/50 rounded-2xl p-6 md:p-8 border border-beige-medium/30">
-              <h2 className="text-2xl font-bold text-dark mb-4">Overview</h2>
-              <p className="text-dark-medium leading-relaxed text-lg">{movie.overview}</p>
+            <div className="bg-beige-light/50 rounded-2xl p-4 md:p-6 lg:p-8 border border-beige-medium/30">
+              <h2 className="text-xl md:text-2xl font-bold text-dark mb-3 md:mb-4">Overview</h2>
+              <p className="text-dark-medium leading-relaxed text-base md:text-lg">{movie.overview}</p>
             </div>
           )}
 
           {/* Cast */}
           {topCast.length > 0 && (
-            <div className="bg-beige-light/50 rounded-2xl p-6 md:p-8 border border-beige-medium/30">
-              <h2 className="text-2xl font-bold text-dark mb-6 flex items-center gap-2">
-                <UserGroupIcon className="w-6 h-6" />
+            <div className="bg-beige-light/50 rounded-2xl p-4 md:p-6 lg:p-8 border border-beige-medium/30">
+              <h2 className="text-xl md:text-2xl font-bold text-dark mb-4 md:mb-6 flex items-center gap-2">
+                <UserGroupIcon className="w-5 h-5 md:w-6 md:h-6" />
                 Cast
               </h2>
-              <div className="flex gap-4 overflow-x-auto pb-2 -mx-2 px-2">
+              <div className="flex gap-3 md:gap-4 overflow-x-auto pb-2 -mx-2 px-2">
                 {topCast.map((actor) => (
                   <div 
                     key={actor.id} 
@@ -203,7 +203,7 @@ export const MovieDetail: React.FC<MovieDetailProps> = ({
                       name: actor.name,
                       profile_path: actor.profile_path || null,
                     } as Person)}
-                    className="flex-shrink-0 w-28 text-center group cursor-pointer transition-transform duration-200 hover:scale-105"
+                    className="flex-shrink-0 w-24 md:w-28 text-center group cursor-pointer transition-transform duration-200 hover:scale-105"
                   >
                     <div className="relative mb-3">
                       {actor.profile_path ? (
@@ -228,9 +228,9 @@ export const MovieDetail: React.FC<MovieDetailProps> = ({
 
           {/* Trailer */}
           {mainTrailer && trailerUrl && (
-            <div className="bg-beige-light/50 rounded-2xl p-6 md:p-8 border border-beige-medium/30">
-              <h2 className="text-2xl font-bold text-dark mb-6 flex items-center gap-2">
-                <FilmIcon className="w-6 h-6" />
+            <div className="bg-beige-light/50 rounded-2xl p-4 md:p-6 lg:p-8 border border-beige-medium/30">
+              <h2 className="text-xl md:text-2xl font-bold text-dark mb-4 md:mb-6 flex items-center gap-2">
+                <FilmIcon className="w-5 h-5 md:w-6 md:h-6" />
                 Trailer
               </h2>
               <div className="aspect-video rounded-xl overflow-hidden shadow-minimal-lg">
@@ -250,9 +250,9 @@ export const MovieDetail: React.FC<MovieDetailProps> = ({
 
           {/* Similar Movies */}
           {similarMovies.length > 0 && (
-            <div className="bg-beige-light/50 rounded-2xl p-6 md:p-8 border border-beige-medium/30">
-              <h2 className="text-2xl font-bold text-dark mb-6">You might also like</h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div className="bg-beige-light/50 rounded-2xl p-4 md:p-6 lg:p-8 border border-beige-medium/30">
+              <h2 className="text-xl md:text-2xl font-bold text-dark mb-4 md:mb-6">You might also like</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
                 {similarMovies.map((similarMovie) => (
                   <div
                     key={similarMovie.id}

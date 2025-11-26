@@ -42,7 +42,7 @@ export const UpcomingPage: React.FC<UpcomingPageProps> = ({
     <div className="w-full py-8 relative z-10">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-dark mb-2">
+        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-dark mb-2">
           Upcoming Movies
         </h1>
         <p className="text-dark-medium">
