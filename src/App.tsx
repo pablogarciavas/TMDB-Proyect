@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Header, SearchBar } from './components/common';
 import { MovieListPage, MovieDetail, PersonMoviesPage, CompanyMoviesPage, WatchlistPage, UpcomingPage, MovieGuessGame } from './components/movie';
 import { Movie } from './types/movie';
@@ -113,6 +113,14 @@ function App() {
     scrollTo(0, { immediate: false });
   };
 
+  // Ocultar contenido crítico del HTML después del primer render
+  useEffect(() => {
+    const criticalContent = document.querySelector('#root > header, #root > main')
+    if (criticalContent) {
+      criticalContent.remove()
+    }
+  }, [])
+
   return (
     <div className="min-h-screen bg-beige flex flex-col">
       <Header onGenreSelect={handleGenreSelect} onNavigate={handleNavigate} />
@@ -121,8 +129,8 @@ function App() {
         <div className="container-elegant w-full">
           {currentView === 'home' && (
             <div className="flex flex-col items-center justify-start pt-20">
-              {/* Search bar positioned higher */}
-              <div className="w-full max-w-2xl mx-auto animate-fadeInUp opacity-0" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
+              {/* Search bar positioned higher - visible inmediatamente para mejor LCP */}
+              <div className="w-full max-w-2xl mx-auto">
                 <SearchBar 
                   onMovieSelect={handleMovieSelect}
                   onPersonSelect={handlePersonSelect}
@@ -134,7 +142,7 @@ function App() {
 
           {/* Contenido de otras vistas */}
           {currentView !== 'home' && (
-            <div className="animate-fadeInUp opacity-0" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
+            <div className="animate-fadeInUp">
 
               {currentView === 'movie-detail' && selectedMovieId && (
                 <MovieDetail

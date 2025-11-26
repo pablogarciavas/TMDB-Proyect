@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { tmdbApi } from '../services/tmdbApi';
 import { Movie, MovieResponse } from '../types/movie';
 import { useApiCache } from './useApiCache';
@@ -23,6 +23,15 @@ export const useUpcomingMovies = (options: UseUpcomingMoviesOptions = {}) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [totalResults, setTotalResults] = useState<number>(0);
+  const isMountedRef = useRef(true);
+  const currentRequestRef = useRef<string>('');
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   // Memoizar valores de filtros para evitar re-renders innecesarios
   const searchQuery = filters.searchQuery?.trim() || '';

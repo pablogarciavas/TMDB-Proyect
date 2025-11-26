@@ -29,6 +29,8 @@ export const useGenreSearch = (options: UseGenreSearchOptions & { query?: string
   const currentRequestRef = useRef<string>('');
   const [results, setResults] = useState<GenreSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
+  const [query, setQuery] = useState<string>(externalQuery || '');
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -36,6 +38,12 @@ export const useGenreSearch = (options: UseGenreSearchOptions & { query?: string
       isMountedRef.current = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (externalQuery !== undefined) {
+      setQuery(externalQuery);
+    }
+  }, [externalQuery]);
 
   const searchAll = useCallback(async (searchQuery: string) => {
     if (!searchQuery.trim()) {
@@ -160,21 +168,27 @@ export const useGenreSearch = (options: UseGenreSearchOptions & { query?: string
   }, [cache, genreId]);
 
   useEffect(() => {
-    if (!externalQuery) {
+    if (!query.trim()) {
       setResults([]);
+      setIsOpen(false);
       return;
     }
 
     const timeoutId = setTimeout(() => {
-      searchAll(externalQuery);
+      searchAll(query);
+      setIsOpen(true);
     }, 300); // Debounce de 300ms
 
     return () => clearTimeout(timeoutId);
-  }, [externalQuery, searchAll]);
+  }, [query, searchAll]);
 
   return {
+    query,
+    setQuery,
     results,
     loading,
+    isOpen,
+    setIsOpen,
   };
 };
 

@@ -3,7 +3,7 @@ import { MagnifyingGlassIcon, FunnelIcon, XMarkIcon } from '@heroicons/react/24/
 import { WatchlistMovie } from '../../contexts/WatchlistContext';
 import { useGenres } from '../../contexts/GenresContext';
 import { Genre } from '../../types/genre';
-import { Select, SelectOption } from '../ui/Select';
+import { Select } from '../ui/Select';
 
 export interface WatchlistFiltersState {
   searchQuery: string;

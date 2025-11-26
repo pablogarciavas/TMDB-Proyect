@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { MagnifyingGlassIcon, FunnelIcon, XMarkIcon, UserIcon, BuildingOfficeIcon } from '@heroicons/react/24/outline';
 import { useGenreSearch } from '../../hooks/useGenreSearch';
 import { getImageUrl } from '../../services/tmdbApi';
-import { Movie } from '../../types/movie';
 import { Person } from '../../types/person';
 import { Company } from '../../types/company';
 import { Select } from '../ui/Select';

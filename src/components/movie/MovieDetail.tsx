@@ -32,7 +32,7 @@ export const MovieDetail: React.FC<MovieDetailProps> = ({
   onMovieClick,
   onPersonSelect,
 }) => {
-  const { movie, credits, watchProviders, videos, similarMovies, loading, error } = useMovieDetails(movieId);
+  const { movie, credits, videos, similarMovies, loading, error } = useMovieDetails(movieId);
   const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useWatchlist();
 
   // Get main trailer (first official trailer, or first video) - MUST be before conditional returns

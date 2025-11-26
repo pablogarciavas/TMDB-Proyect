@@ -23,7 +23,6 @@ export const useSmoothScroll = () => {
       gestureOrientation: 'vertical',
       smoothWheel: true, // Habilitar scroll suave con rueda
       wheelMultiplier: 1, // Multiplicador de velocidad de rueda
-      smoothTouch: false, // Desactivar en touch para mejor rendimiento
       touchMultiplier: 2,
     });
 
