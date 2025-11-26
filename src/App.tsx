@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Header, SearchBar } from './components/common';
 import { MovieListPage, MovieDetail, PersonMoviesPage, CompanyMoviesPage, WatchlistPage, UpcomingPage, MovieGuessGame } from './components/movie';
 import { Movie } from './types/movie';
@@ -112,14 +112,6 @@ function App() {
     }
     scrollTo(0, { immediate: false });
   };
-
-  // Ocultar contenido crítico del HTML después del primer render
-  useEffect(() => {
-    const criticalContent = document.querySelector('#root > header, #root > main')
-    if (criticalContent) {
-      criticalContent.remove()
-    }
-  }, [])
 
   return (
     <div className="min-h-screen bg-beige flex flex-col">

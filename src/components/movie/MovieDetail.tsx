@@ -107,6 +107,8 @@ export const MovieDetail: React.FC<MovieDetailProps> = ({
             src={getImageUrl(movie.backdrop_path, 'w1280')}
             alt={movie.title}
             className="w-full h-full object-cover"
+            fetchPriority="high"
+            decoding="async"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-beige via-beige/80 to-transparent"></div>
           
@@ -211,6 +213,10 @@ export const MovieDetail: React.FC<MovieDetailProps> = ({
                           src={getImageUrl(actor.profile_path, 'w185')}
                           alt={actor.name}
                           className="w-28 h-28 rounded-full object-cover border-2 border-beige-medium group-hover:border-dark/30 transition-colors duration-200 shadow-minimal"
+                          loading="lazy"
+                          decoding="async"
+                          width="185"
+                          height="185"
                         />
                       ) : (
                         <div className="w-28 h-28 rounded-full bg-beige-medium flex items-center justify-center border-2 border-beige-medium group-hover:border-dark/30 transition-colors duration-200 shadow-minimal">
@@ -264,6 +270,10 @@ export const MovieDetail: React.FC<MovieDetailProps> = ({
                         src={getImageUrl(similarMovie.poster_path, 'w500')}
                         alt={similarMovie.title}
                         className="w-full aspect-[2/3] object-cover rounded-xl group-hover:scale-105 transition-transform duration-200 shadow-minimal"
+                        loading="lazy"
+                        decoding="async"
+                        width="500"
+                        height="750"
                       />
                     ) : (
                       <div className="w-full aspect-[2/3] bg-beige-medium rounded-xl flex items-center justify-center shadow-minimal">
@@ -287,9 +297,10 @@ export const MovieDetail: React.FC<MovieDetailProps> = ({
                 src={getImageUrl(movie.poster_path, 'w500')}
                 alt={movie.title}
                 className="w-full h-auto block"
-                style={{
-                  display: 'block',
-                }}
+                loading="lazy"
+                decoding="async"
+                width="500"
+                height="750"
               />
             </div>
           )}

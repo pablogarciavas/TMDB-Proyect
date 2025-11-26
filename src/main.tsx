@@ -5,7 +5,6 @@ import { WatchlistProvider } from './contexts/WatchlistContext'
 import { GenresProvider } from './contexts/GenresContext'
 import './styles/index.css'
 
-// Ocultar contenido crítico del HTML solo después de que React haya renderizado
 const rootElement = document.getElementById('root')!
 
 ReactDOM.createRoot(rootElement).render(
@@ -17,4 +16,15 @@ ReactDOM.createRoot(rootElement).render(
     </GenresProvider>
   </React.StrictMode>,
 )
+
+// Limpiar el contenido crítico después de que React haya renderizado
+// El script inline ya lo ocultó, ahora lo removemos del DOM
+requestAnimationFrame(() => {
+  requestAnimationFrame(() => {
+    const criticalHeader = document.getElementById('critical-header')
+    const criticalMain = document.getElementById('critical-main')
+    if (criticalHeader) criticalHeader.remove()
+    if (criticalMain) criticalMain.remove()
+  })
+})
 

@@ -24,29 +24,81 @@
     <!-- Preconnect para mejorar rendimiento -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://image.tmdb.org" />
+    <link rel="dns-prefetch" href="https://api.themoviedb.org" />
+    
+    <!-- Script inline para ocultar contenido crítico cuando React comience a renderizar -->
+    <script>
+      // Ocultar contenido crítico inmediatamente cuando el DOM esté listo
+      (function() {
+        function hideCriticalContent() {
+          const criticalHeader = document.getElementById('critical-header');
+          const criticalMain = document.getElementById('critical-main');
+          if (criticalHeader) criticalHeader.style.display = 'none';
+          if (criticalMain) criticalMain.style.display = 'none';
+        }
+        
+        // Intentar ocultar inmediatamente si el DOM ya está listo
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', hideCriticalContent);
+        } else {
+          hideCriticalContent();
+        }
+        
+        // También ocultar cuando React comience a renderizar (backup)
+        // Esto se ejecutará antes de que React renderice
+        setTimeout(hideCriticalContent, 0);
+      })();
+    </script>
   </head>
   <body>
     <div id="root">
       <!-- Contenido crítico visible mientras carga React - optimizado para LCP -->
-      <header style="background-color: #DDD0C8; padding: 1rem 0; width: 100%;">
-        <div style="max-width: 1280px; margin: 0 auto; padding: 0 1rem;">
-          <h1 style="font-size: 1.875rem; font-weight: bold; color: #323232; margin: 0; line-height: 1.2;">
-            The Movie Database
+      <header id="critical-header" style="background-color: #DDD0C8; padding: 0.75rem 0; width: 100%; position: relative; z-index: 50;">
+        <div style="max-width: 1280px; margin: 0 auto; padding: 0 0.75rem;">
+          <h1 style="font-size: 0.875rem; font-weight: bold; color: #323232; margin: 0; line-height: 1.2;">
+            <span class="hidden-sm">The Movie Database</span>
+            <span class="visible-sm">MovieDB</span>
           </h1>
         </div>
       </header>
-      <main style="min-height: 60vh; background-color: #DDD0C8; padding: 3rem 1rem;">
+      <main id="critical-main" style="min-height: 60vh; background-color: #DDD0C8; padding: 5rem 0.75rem 3rem;">
         <div style="max-width: 1280px; margin: 0 auto;">
           <div style="max-width: 42rem; margin: 0 auto;">
             <input 
               type="text" 
               placeholder="Search movies, actors, directors, studios..." 
-              style="width: 100%; padding: 1rem 1.25rem; font-size: 1.125rem; border-radius: 1rem; border: 1px solid #E8DFD5; background-color: #F5F0EB; color: #323232;"
+              style="width: 100%; padding: 0.75rem 1rem; font-size: 0.875rem; border-radius: 1rem; border: 1px solid #E8DFD5; background-color: #F5F0EB; color: #323232;"
               disabled
             />
           </div>
         </div>
       </main>
+      <style>
+        /* Responsive para el título crítico - coincidir con Tailwind */
+        @media (min-width: 640px) {
+          .hidden-sm { display: inline !important; }
+          .visible-sm { display: none !important; }
+          #critical-header { padding: 1.25rem 0 !important; }
+          #critical-header div { padding: 0 1rem !important; }
+          #critical-header h1 { font-size: 1.125rem !important; }
+          #critical-main { padding: 5rem 1rem 3rem !important; }
+          #critical-main input { padding: 1rem 1.25rem !important; font-size: 1.125rem !important; }
+        }
+        @media (min-width: 768px) {
+          #critical-header h1 { font-size: 1.5rem !important; }
+        }
+        @media (min-width: 1024px) {
+          #critical-header h1 { font-size: 1.875rem !important; }
+        }
+        @media (min-width: 1280px) {
+          #critical-header h1 { font-size: 1.875rem !important; }
+        }
+        @media (max-width: 639px) {
+          .hidden-sm { display: none !important; }
+          .visible-sm { display: inline !important; }
+        }
+      </style>
     </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

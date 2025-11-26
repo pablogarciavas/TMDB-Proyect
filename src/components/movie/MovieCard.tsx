@@ -58,6 +58,10 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick, index = 0 
             src={getImageUrl(movie.poster_path, 'w500')}
             alt={movie.title}
             className="w-full aspect-[2/3] object-cover"
+            loading="lazy"
+            decoding="async"
+            width="500"
+            height="750"
           />
         ) : (
           <div className="w-full aspect-[2/3] bg-beige-medium flex items-center justify-center">

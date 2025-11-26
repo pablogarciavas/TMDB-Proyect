@@ -138,6 +138,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                           src={getImageUrl(result.image, 'w185')}
                           alt={result.title}
                           className="w-12 h-16 object-cover rounded flex-shrink-0"
+                          loading="lazy"
+                          decoding="async"
+                          width="185"
+                          height="278"
                         />
                       ) : (
                         <div className="w-12 h-16 bg-beige-medium rounded flex-shrink-0 flex items-center justify-center">
@@ -176,6 +180,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                           src={getImageUrl(result.image, 'w185')}
                           alt={result.title}
                           className="w-12 h-12 object-cover rounded-full flex-shrink-0"
+                          loading="lazy"
+                          decoding="async"
+                          width="185"
+                          height="185"
                         />
                       ) : (
                         <div className="w-12 h-12 bg-beige-medium rounded-full flex-shrink-0 flex items-center justify-center">
@@ -214,6 +222,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                           src={getImageUrl(result.image, 'w185')}
                           alt={result.title}
                           className="w-12 h-12 object-contain bg-beige p-1 rounded flex-shrink-0"
+                          loading="lazy"
+                          decoding="async"
+                          width="185"
+                          height="185"
                         />
                       ) : (
                         <div className="w-12 h-12 bg-beige-medium rounded flex-shrink-0 flex items-center justify-center">

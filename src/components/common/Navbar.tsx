@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useGenres } from '../../contexts/GenresContext';
 import { Genre } from '../../types/genre';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import gsap from 'gsap';
 
 interface NavbarProps {
   onGenreSelect?: (genreId: number, genreName: string) => void;
@@ -21,7 +20,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onGenreSelect, onNavigate }) => 
   const genreModalRef = useRef<HTMLDivElement>(null);
   const mobileMenuPanelRef = useRef<HTMLDivElement>(null);
   const mobileMenuOverlayRef = useRef<HTMLDivElement>(null);
-  const mobileMenuItemsRef = useRef<HTMLDivElement[]>([]);
+  const mobileMenuItemsRef = useRef<(HTMLButtonElement | null)[]>([]);
   const genreModalContentRef = useRef<HTMLDivElement>(null);
   const genreButtonsRef = useRef<HTMLButtonElement[]>([]);
 
@@ -116,76 +115,101 @@ export const Navbar: React.FC<NavbarProps> = ({ onGenreSelect, onNavigate }) => 
     }
   }, [mobileMenuOpen]);
 
-  // Animaciones GSAP para el menú mobile
+  // Animaciones GSAP para el menú mobile (lazy loaded)
   useEffect(() => {
     if (shouldRenderMenu && mobileMenuPanelRef.current && mobileMenuOverlayRef.current) {
-      const panel = mobileMenuPanelRef.current;
-      const overlay = mobileMenuOverlayRef.current;
-      const items = mobileMenuItemsRef.current.filter(Boolean);
+      // Solo cargar GSAP en mobile
+      if (window.innerWidth >= 640) return;
 
-      if (mobileMenuOpen) {
-        // Animación de entrada
-        gsap.set(panel, { x: '100%' });
-        gsap.set(overlay, { opacity: 0 });
-        gsap.set(items, { opacity: 0, y: 20 });
+      // Lazy load GSAP solo cuando se necesite
+      import('gsap').then(({ default: gsap }) => {
+        const panel = mobileMenuPanelRef.current;
+        const overlay = mobileMenuOverlayRef.current;
+        const items = mobileMenuItemsRef.current.filter(Boolean);
 
-        const tl = gsap.timeline();
+        if (!panel || !overlay) return;
 
-        tl.to(overlay, {
-          opacity: 1,
-          duration: 0.3,
-          ease: 'power2.out',
-        });
+        if (mobileMenuOpen) {
+          // Optimizar para animaciones
+          panel.style.willChange = 'transform';
+          overlay.style.willChange = 'opacity';
+          items.forEach(item => {
+            if (item) item.style.willChange = 'opacity, transform';
+          });
 
-        tl.to(panel, {
-          x: '0%',
-          duration: 0.4,
-          ease: 'power3.out',
-        }, '-=0.2');
+          // Animación de entrada
+          gsap.set(panel, { x: '100%' });
+          gsap.set(overlay, { opacity: 0 });
+          gsap.set(items, { opacity: 0, y: 20 });
 
-        if (items.length > 0) {
-          tl.to(items, {
+          const tl = gsap.timeline({
+            onComplete: () => {
+              // Limpiar will-change después de la animación
+              panel.style.willChange = 'auto';
+              overlay.style.willChange = 'auto';
+              items.forEach(item => {
+                if (item) item.style.willChange = 'auto';
+              });
+            },
+          });
+
+          tl.to(overlay, {
             opacity: 1,
-            y: 0,
             duration: 0.3,
-            stagger: 0.05,
             ease: 'power2.out',
+          });
+
+          tl.to(panel, {
+            x: '0%',
+            duration: 0.4,
+            ease: 'power3.out',
+          }, '-=0.2');
+
+          if (items.length > 0) {
+            tl.to(items, {
+              opacity: 1,
+              y: 0,
+              duration: 0.3,
+              stagger: 0.05,
+              ease: 'power2.out',
+            }, '-=0.2');
+          }
+        } else {
+          // Animación de salida
+          const tl = gsap.timeline({
+            onComplete: () => {
+              // Limpiar will-change después de la animación
+              panel.style.willChange = 'auto';
+              overlay.style.willChange = 'auto';
+              items.forEach(item => {
+                if (item) item.style.willChange = 'auto';
+              });
+            },
+          });
+
+          if (items.length > 0) {
+            tl.to(items, {
+              opacity: 0,
+              y: 20,
+              duration: 0.2,
+              stagger: 0.03,
+              ease: 'power2.in',
+            });
+          }
+
+          tl.to(panel, {
+            x: '100%',
+            duration: 0.3,
+            ease: 'power3.in',
+          }, '-=0.1');
+
+          tl.to(overlay, {
+            opacity: 0,
+            duration: 0.2,
+            ease: 'power2.in',
           }, '-=0.2');
         }
-
-        return () => {
-          tl.kill();
-        };
-      } else {
-        // Animación de salida
-        const tl = gsap.timeline();
-
-        if (items.length > 0) {
-          tl.to(items, {
-            opacity: 0,
-            y: 20,
-            duration: 0.2,
-            stagger: 0.03,
-            ease: 'power2.in',
-          });
-        }
-
-        tl.to(panel, {
-          x: '100%',
-          duration: 0.3,
-          ease: 'power3.in',
-        }, '-=0.1');
-
-        tl.to(overlay, {
-          opacity: 0,
-          duration: 0.2,
-          ease: 'power2.in',
-        }, '-=0.2');
-
-        return () => {
-          tl.kill();
-        };
-      }
+      });
     }
   }, [shouldRenderMenu, mobileMenuOpen]);
 
@@ -202,85 +226,107 @@ export const Navbar: React.FC<NavbarProps> = ({ onGenreSelect, onNavigate }) => 
     }
   }, [openDropdown]);
 
-  // Animaciones GSAP para el modal de géneros
+  // Animaciones GSAP para el modal de géneros (lazy loaded)
   useEffect(() => {
     if (shouldRenderGenreModal && genreModalRef.current && genreModalContentRef.current) {
       // Solo animar en mobile
       if (window.innerWidth >= 640) return;
 
-      const modal = genreModalRef.current;
-      const content = genreModalContentRef.current;
-      const buttons = genreButtonsRef.current.filter(Boolean);
+      // Lazy load GSAP solo cuando se necesite
+      import('gsap').then(({ default: gsap }) => {
+        const modal = genreModalRef.current;
+        const content = genreModalContentRef.current;
+        const buttons = genreButtonsRef.current.filter(Boolean);
 
-      if (openDropdown === 'genre') {
-        // Animación de entrada
-        gsap.set(modal, { opacity: 0, scale: 0.95 });
-        gsap.set(content, { opacity: 0, y: 20 });
-        gsap.set(buttons, { opacity: 0, scale: 0.9 });
+        if (!modal || !content) return;
 
-        const tl = gsap.timeline();
+        if (openDropdown === 'genre') {
+          // Optimizar para animaciones
+          modal.style.willChange = 'opacity, transform';
+          content.style.willChange = 'opacity, transform';
+          buttons.forEach(btn => {
+            if (btn) btn.style.willChange = 'opacity, transform';
+          });
 
-        tl.to(modal, {
-          opacity: 1,
-          scale: 1,
-          duration: 0.3,
-          ease: 'power2.out',
-        });
+          // Animación de entrada
+          gsap.set(modal, { opacity: 0, scale: 0.95 });
+          gsap.set(content, { opacity: 0, y: 20 });
+          gsap.set(buttons, { opacity: 0, scale: 0.9 });
 
-        tl.to(content, {
-          opacity: 1,
-          y: 0,
-          duration: 0.3,
-          ease: 'power2.out',
-        }, '-=0.2');
+          const tl = gsap.timeline({
+            onComplete: () => {
+              // Limpiar will-change después de la animación
+              modal.style.willChange = 'auto';
+              content.style.willChange = 'auto';
+              buttons.forEach(btn => {
+                if (btn) btn.style.willChange = 'auto';
+              });
+            },
+          });
 
-        if (buttons.length > 0) {
-          tl.to(buttons, {
+          tl.to(modal, {
             opacity: 1,
             scale: 1,
-            duration: 0.25,
-            stagger: 0.03,
-            ease: 'back.out(1.2)',
-          }, '-=0.15');
-        }
-
-        return () => {
-          tl.kill();
-        };
-      } else {
-        // Animación de salida
-        const tl = gsap.timeline();
-
-        if (buttons.length > 0) {
-          tl.to(buttons, {
-            opacity: 0,
-            scale: 0.9,
-            duration: 0.2,
-            stagger: 0.02,
-            ease: 'power2.in',
+            duration: 0.3,
+            ease: 'power2.out',
           });
-        }
 
-        if (content) {
           tl.to(content, {
+            opacity: 1,
+            y: 0,
+            duration: 0.3,
+            ease: 'power2.out',
+          }, '-=0.2');
+
+          if (buttons.length > 0) {
+            tl.to(buttons, {
+              opacity: 1,
+              scale: 1,
+              duration: 0.25,
+              stagger: 0.03,
+              ease: 'back.out(1.2)',
+            }, '-=0.15');
+          }
+        } else {
+          // Animación de salida
+          const tl = gsap.timeline({
+            onComplete: () => {
+              // Limpiar will-change después de la animación
+              modal.style.willChange = 'auto';
+              content.style.willChange = 'auto';
+              buttons.forEach(btn => {
+                if (btn) btn.style.willChange = 'auto';
+              });
+            },
+          });
+
+          if (buttons.length > 0) {
+            tl.to(buttons, {
+              opacity: 0,
+              scale: 0.9,
+              duration: 0.2,
+              stagger: 0.02,
+              ease: 'power2.in',
+            });
+          }
+
+          if (content) {
+            tl.to(content, {
+              opacity: 0,
+              y: 20,
+              duration: 0.2,
+              ease: 'power2.in',
+            }, '-=0.1');
+          }
+
+          tl.to(modal, {
             opacity: 0,
-            y: 20,
-            duration: 0.2,
+            scale: 0.95,
+            duration: 0.25,
             ease: 'power2.in',
           }, '-=0.1');
         }
-
-        tl.to(modal, {
-          opacity: 0,
-          scale: 0.95,
-          duration: 0.25,
-          ease: 'power2.in',
-        }, '-=0.1');
-
-        return () => {
-          tl.kill();
-        };
-      }
+      });
     }
   }, [shouldRenderGenreModal, openDropdown]);
 
