@@ -4,10 +4,50 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Explora películas, actores, directores y estudios cinematográficos con The Movie Database. Búsqueda en tiempo real y información detallada de películas." />
+    <meta name="keywords" content="películas, movies, actores, directores, estudios, cine, TMDB, The Movie Database" />
+    <meta name="author" content="MovieDB" />
+    <meta name="theme-color" content="#DDD0C8" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="MovieDB - The Movie Database" />
+    <meta property="og:description" content="Explora películas, actores, directores y estudios cinematográficos" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content="MovieDB - The Movie Database" />
+    <meta property="twitter:description" content="Explora películas, actores, directores y estudios cinematográficos" />
+    
     <title>MovieDB - The Movie Database</title>
+    
+    <!-- Preconnect para mejorar rendimiento -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Contenido crítico visible mientras carga React - optimizado para LCP -->
+      <header style="background-color: #DDD0C8; padding: 1rem 0; width: 100%;">
+        <div style="max-width: 1280px; margin: 0 auto; padding: 0 1rem;">
+          <h1 style="font-size: 1.875rem; font-weight: bold; color: #323232; margin: 0; line-height: 1.2;">
+            The Movie Database
+          </h1>
+        </div>
+      </header>
+      <main style="min-height: 60vh; background-color: #DDD0C8; padding: 3rem 1rem;">
+        <div style="max-width: 1280px; margin: 0 auto;">
+          <div style="max-width: 42rem; margin: 0 auto;">
+            <input 
+              type="text" 
+              placeholder="Search movies, actors, directors, studios..." 
+              style="width: 100%; padding: 1rem 1.25rem; font-size: 1.125rem; border-radius: 1rem; border: 1px solid #E8DFD5; background-color: #F5F0EB; color: #323232;"
+              disabled
+            />
+          </div>
+        </div>
+      </main>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

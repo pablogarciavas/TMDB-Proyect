@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { MagnifyingGlassIcon, FunnelIcon, XMarkIcon, UserIcon, BuildingOfficeIcon } from '@heroicons/react/24/outline';
 import { useGenreSearch } from '../../hooks/useGenreSearch';
 import { getImageUrl } from '../../services/tmdbApi';
-import { Movie } from '../../types/movie';
 import { Person } from '../../types/person';
 import { Company } from '../../types/company';
 import { Select } from '../ui/Select';
@@ -47,7 +46,8 @@ export const GenreFilters: React.FC<GenreFiltersProps> = ({
       r => r.type === 'person' || r.type === 'company'
     );
     setShowSuggestions(filters.searchQuery.trim() !== '' && hasPeopleOrCompanies);
-  }, [filters.searchQuery, searchResults]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters.searchQuery, searchResults.length]);
 
   const handleFilterChange = (key: keyof GenreFiltersState, value: string) => {
     onFiltersChange({

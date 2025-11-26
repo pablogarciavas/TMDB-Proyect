@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useMovieDetails } from '../../hooks/useMovieDetails';
 import { useWatchlist } from '../../hooks/useWatchlist';
 import { Movie } from '../../types/movie';
+import { Person } from '../../types/person';
 import { Loading } from '../ui/Loading';
 import { ErrorMessage } from '../ui/ErrorMessage';
 import { getImageUrl } from '../../services/tmdbApi';
@@ -22,15 +23,29 @@ interface MovieDetailProps {
   movieId: number;
   onBack?: () => void;
   onMovieClick?: (movie: Movie) => void;
+  onPersonSelect?: (person: Person) => void;
 }
 
 export const MovieDetail: React.FC<MovieDetailProps> = ({
   movieId,
   onBack,
   onMovieClick,
+  onPersonSelect,
 }) => {
-  const { movie, credits, watchProviders, videos, similarMovies, loading, error } = useMovieDetails(movieId);
+  const { movie, credits, videos, similarMovies, loading, error } = useMovieDetails(movieId);
   const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useWatchlist();
+
+  // Get main trailer (first official trailer, or first video) - MUST be before conditional returns
+  const mainTrailer = useMemo(() => {
+    return videos?.results.find(v => v.type === 'Trailer' && v.official) || videos?.results[0];
+  }, [videos?.results]);
+
+  // Memoize YouTube embed URL to prevent unnecessary re-renders - MUST be before conditional returns
+  const trailerUrl = useMemo(() => {
+    if (!mainTrailer?.key) return null;
+    // Add YouTube parameters to optimize loading and prevent unnecessary requests
+    return `https://www.youtube.com/embed/${mainTrailer.key}?rel=0&modestbranding=1&playsinline=1&enablejsapi=0`;
+  }, [mainTrailer?.key]);
 
   if (loading) {
     return (
@@ -77,9 +92,6 @@ export const MovieDetail: React.FC<MovieDetailProps> = ({
       day: 'numeric',
     });
   };
-
-  // Get main trailer (first official trailer, or first video)
-  const mainTrailer = videos?.results.find(v => v.type === 'Trailer' && v.official) || videos?.results[0];
 
   // Get original language name
   const originalLanguage = movie.spoken_languages?.find(
@@ -186,6 +198,11 @@ export const MovieDetail: React.FC<MovieDetailProps> = ({
                 {topCast.map((actor) => (
                   <div 
                     key={actor.id} 
+                    onClick={() => onPersonSelect?.({
+                      id: actor.id,
+                      name: actor.name,
+                      profile_path: actor.profile_path || null,
+                    } as Person)}
                     className="flex-shrink-0 w-28 text-center group cursor-pointer transition-transform duration-200 hover:scale-105"
                   >
                     <div className="relative mb-3">
@@ -210,7 +227,7 @@ export const MovieDetail: React.FC<MovieDetailProps> = ({
           )}
 
           {/* Trailer */}
-          {mainTrailer && (
+          {mainTrailer && trailerUrl && (
             <div className="bg-beige-light/50 rounded-2xl p-6 md:p-8 border border-beige-medium/30">
               <h2 className="text-2xl font-bold text-dark mb-6 flex items-center gap-2">
                 <FilmIcon className="w-6 h-6" />
@@ -218,10 +235,14 @@ export const MovieDetail: React.FC<MovieDetailProps> = ({
               </h2>
               <div className="aspect-video rounded-xl overflow-hidden shadow-minimal-lg">
                 <iframe
-                  src={`https://www.youtube.com/embed/${mainTrailer.key}`}
+                  key={mainTrailer.key}
+                  src={trailerUrl}
                   title={mainTrailer.name}
                   className="w-full h-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
+                  loading="lazy"
+                  frameBorder="0"
                 ></iframe>
               </div>
             </div>

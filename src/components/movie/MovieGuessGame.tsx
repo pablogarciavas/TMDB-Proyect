@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useMovieGuessGame, GameConfig } from '../../hooks/useMovieGuessGame';
+import { useMovieGuessGame } from '../../hooks/useMovieGuessGame';
 import { DifficultySelector } from './DifficultySelector';
 import { getImageUrl } from '../../services/tmdbApi';
 import { Loading } from '../ui/Loading';
@@ -86,15 +86,15 @@ export const MovieGuessGame: React.FC = () => {
               if (movie.vote_average < 4.0) return false;
               
               // Filtrar por popularidad mínima (>= 5, más flexible)
-              if (movie.popularity < 5) return false;
+              if ((movie.popularity ?? 0) < 5) return false;
               
               return true;
             })
             // Ordenar por popularidad y rating (más relevantes primero)
             .sort((a, b) => {
               // Priorizar por popularidad, luego por rating
-              if (Math.abs(b.popularity - a.popularity) > 5) {
-                return b.popularity - a.popularity;
+              if (Math.abs((b.popularity ?? 0) - (a.popularity ?? 0)) > 5) {
+                return (b.popularity ?? 0) - (a.popularity ?? 0);
               }
               return b.vote_average - a.vote_average;
             });
@@ -110,7 +110,7 @@ export const MovieGuessGame: React.FC = () => {
                 if (movie.vote_average < 3.0) return false;
                 return true;
               })
-              .sort((a, b) => b.popularity - a.popularity);
+              .sort((a, b) => (b.popularity ?? 0) - (a.popularity ?? 0));
           }
           
           // Tomar solo las 5 mejores

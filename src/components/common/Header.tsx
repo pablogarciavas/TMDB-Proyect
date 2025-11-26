@@ -15,8 +15,8 @@ export const Header: React.FC<HeaderProps> = ({ onGenreSelect, onNavigate }) => 
     <header className="w-full bg-beige relative z-50">
       <div className="container-elegant">
         <div className="flex items-center justify-between py-4 md:py-5">
-          {/* Título a la izquierda */}
-          <div className="flex-shrink-0 animate-slideInRight">
+          {/* Título a la izquierda - sin animación para mejor LCP */}
+          <div className="flex-shrink-0">
             <button
               onClick={handleTitleClick}
               className="text-xl md:text-2xl lg:text-3xl font-bold text-dark tracking-tight hover:opacity-70 transition-opacity duration-200 cursor-pointer"

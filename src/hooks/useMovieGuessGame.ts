@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import axios from 'axios';
 import { tmdbApi } from '../services/tmdbApi';
 import { MovieDetails, Credits } from '../types/movieDetails';
@@ -126,7 +126,7 @@ export const useMovieGuessGame = (): UseMovieGuessGameReturn => {
   }, [movie]);
 
   // Generar pistas según la dificultad
-  const generateHints = useCallback((movieData: MovieDetails, credits: Credits, difficulty: Difficulty, config: GameConfig): Hint[] => {
+  const generateHints = useCallback((movieData: MovieDetails, credits: Credits, difficulty: Difficulty, _config: GameConfig): Hint[] => {
     const hintsList: Hint[] = [];
     let hintId = 1;
 

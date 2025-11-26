@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { useWatchlist } from '../../hooks/useWatchlist';
 import { Movie } from '../../types/movie';
 import { MovieGrid } from './MovieGrid';
-import { Loading } from '../ui/Loading';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { WatchlistFilters, WatchlistFiltersState } from './WatchlistFilters';
 
