@@ -17,8 +17,6 @@ ReactDOM.createRoot(rootElement).render(
   </React.StrictMode>,
 )
 
-// Limpiar el contenido crítico después de que React haya renderizado
-// El script inline ya lo ocultó, ahora lo removemos del DOM
 requestAnimationFrame(() => {
   requestAnimationFrame(() => {
     const criticalHeader = document.getElementById('critical-header')
