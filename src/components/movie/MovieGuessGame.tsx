@@ -199,7 +199,7 @@ export const MovieGuessGame: React.FC = () => {
     return (
       <div className="w-full py-8">
         <div className="mb-8 text-center">
-          <h1 className="text-3xl md:text-4xl font-bold text-dark mb-2">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-dark mb-2">
             Movie Guess Game
           </h1>
           <p className="text-dark-medium">
@@ -248,7 +248,7 @@ export const MovieGuessGame: React.FC = () => {
         <div className="max-w-3xl mx-auto">
           {/* Mensaje de resultado */}
           <div className="text-center mb-8">
-            <h2 className={`text-3xl md:text-4xl font-bold mb-4 ${
+            <h2 className={`text-2xl md:text-3xl lg:text-4xl font-bold mb-4 ${
               gameState === 'won' ? 'text-green-600' : 'text-red-600'
             }`}>
               {gameState === 'won' ? 'Congratulations! You won!' : 'Too bad! Better luck next time...'}
@@ -262,20 +262,20 @@ export const MovieGuessGame: React.FC = () => {
           </div>
 
           {/* Información de la película */}
-          <div className="bg-beige-light border border-beige-medium rounded-2xl p-6 md:p-8 mb-6">
-            <div className="flex flex-col md:flex-row gap-6">
+          <div className="bg-beige-light border border-beige-medium rounded-2xl p-4 md:p-6 lg:p-8 mb-4 md:mb-6">
+            <div className="flex flex-col md:flex-row gap-4 md:gap-6">
               {/* Poster */}
               {movie.poster_path && (
                 <img
                   src={getImageUrl(movie.poster_path, 'w500')}
                   alt={movie.title}
-                  className="w-full md:w-64 h-auto rounded-xl object-cover"
+                  className="w-full md:w-64 h-auto rounded-xl object-cover max-w-full"
                 />
               )}
 
               {/* Información */}
               <div className="flex-1">
-                <h3 className="text-2xl md:text-3xl font-bold text-dark mb-4">
+                <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-dark mb-3 md:mb-4">
                   {movie.title}
                 </h3>
                 {movie.tagline && (

@@ -77,7 +77,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <div ref={searchRef} className="relative w-full max-w-2xl mx-auto">
+    <div ref={searchRef} className="relative w-full max-w-2xl mx-auto px-0">
       <div className="relative">
         <input
           type="text"
@@ -85,13 +85,13 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => query && setIsOpen(true)}
           placeholder={placeholder}
-          className="input pr-12 text-lg py-4 md:py-5 w-full rounded-2xl"
+          className="input pr-10 md:pr-12 text-sm md:text-base lg:text-lg py-3 md:py-4 lg:py-5 w-full rounded-2xl"
         />
-        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+        <div className="absolute right-2.5 md:right-3 top-1/2 -translate-y-1/2">
           {loading ? (
-            <div className="animate-spin rounded-full h-5 w-5 border-2 border-dark border-t-transparent"></div>
+            <div className="animate-spin rounded-full h-4 w-4 md:h-5 md:w-5 border-2 border-dark border-t-transparent"></div>
           ) : (
-            <MagnifyingGlassIcon className="w-5 h-5 text-dark-light" />
+            <MagnifyingGlassIcon className="w-4 h-4 md:w-5 md:h-5 text-dark-light" />
           )}
         </div>
       </div>
@@ -99,7 +99,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       {/* Dropdown de resultados */}
       {isOpen && (results.length > 0 || loading) && (
         <div 
-          className="absolute top-full left-0 right-0 mt-2 bg-beige-light border border-beige-medium rounded-2xl shadow-minimal-lg z-40 max-h-96 overflow-hidden animate-scaleIn dropdown-rounded"
+          className="absolute top-full left-0 right-0 mt-2 bg-beige-light border border-beige-medium rounded-2xl shadow-minimal-lg z-40 max-h-80 md:max-h-96 overflow-hidden animate-scaleIn dropdown-rounded"
           data-lenis-prevent
           style={{ 
             overscrollBehavior: 'contain',
@@ -138,6 +138,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                           src={getImageUrl(result.image, 'w185')}
                           alt={result.title}
                           className="w-12 h-16 object-cover rounded flex-shrink-0"
+                          loading="lazy"
+                          decoding="async"
+                          width="185"
+                          height="278"
                         />
                       ) : (
                         <div className="w-12 h-16 bg-beige-medium rounded flex-shrink-0 flex items-center justify-center">
@@ -176,6 +180,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                           src={getImageUrl(result.image, 'w185')}
                           alt={result.title}
                           className="w-12 h-12 object-cover rounded-full flex-shrink-0"
+                          loading="lazy"
+                          decoding="async"
+                          width="185"
+                          height="185"
                         />
                       ) : (
                         <div className="w-12 h-12 bg-beige-medium rounded-full flex-shrink-0 flex items-center justify-center">
@@ -214,6 +222,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                           src={getImageUrl(result.image, 'w185')}
                           alt={result.title}
                           className="w-12 h-12 object-contain bg-beige p-1 rounded flex-shrink-0"
+                          loading="lazy"
+                          decoding="async"
+                          width="185"
+                          height="185"
                         />
                       ) : (
                         <div className="w-12 h-12 bg-beige-medium rounded flex-shrink-0 flex items-center justify-center">

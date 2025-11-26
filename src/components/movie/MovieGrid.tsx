@@ -11,7 +11,7 @@ interface MovieGridProps {
 export const MovieGrid: React.FC<MovieGridProps> = ({ movies, onMovieClick, loading = false }) => {
   if (loading) {
     return (
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4 lg:gap-6">
         {[...Array(10)].map((_, index) => (
           <div
             key={index}
@@ -37,7 +37,7 @@ export const MovieGrid: React.FC<MovieGridProps> = ({ movies, onMovieClick, load
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4 lg:gap-6">
       {movies.map((movie, index) => (
         <MovieCard key={movie.id} movie={movie} onClick={onMovieClick} index={index} />
       ))}

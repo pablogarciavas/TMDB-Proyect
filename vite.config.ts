@@ -15,6 +15,7 @@ export default defineConfig({
           // Separar vendor chunks para mejor caching
           'react-vendor': ['react', 'react-dom'],
           'router-vendor': ['react-router-dom'],
+          'gsap-vendor': ['gsap'],
         },
       },
     },

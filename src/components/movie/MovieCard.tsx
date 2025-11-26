@@ -58,6 +58,10 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick, index = 0 
             src={getImageUrl(movie.poster_path, 'w500')}
             alt={movie.title}
             className="w-full aspect-[2/3] object-cover"
+            loading="lazy"
+            decoding="async"
+            width="500"
+            height="750"
           />
         ) : (
           <div className="w-full aspect-[2/3] bg-beige-medium flex items-center justify-center">
@@ -67,7 +71,7 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick, index = 0 
         {/* Watchlist Button */}
         <button
           onClick={handleWatchlistClick}
-          className={`absolute top-2 right-2 p-2 rounded-full backdrop-blur-sm transition-all ${
+          className={`absolute top-1.5 right-1.5 md:top-2 md:right-2 p-1.5 md:p-2 rounded-full backdrop-blur-sm transition-all ${
             isInWatchlist(movie.id)
               ? 'bg-dark/90 text-beige-light'
               : 'bg-dark/60 text-beige-light hover:bg-dark/80'
@@ -75,25 +79,25 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick, index = 0 
           title={isInWatchlist(movie.id) ? 'Remove from watchlist' : 'Add to watchlist'}
         >
           {isInWatchlist(movie.id) ? (
-            <BookmarkIconSolid className="w-5 h-5" />
+            <BookmarkIconSolid className="w-4 h-4 md:w-5 md:h-5" />
           ) : (
-            <BookmarkIcon className="w-5 h-5" />
+            <BookmarkIcon className="w-4 h-4 md:w-5 md:h-5" />
           )}
         </button>
       </div>
 
       {/* Movie Info */}
-      <div className="p-4">
-        <h3 className="font-semibold text-dark mb-2 line-clamp-2 min-h-[3rem]">
+      <div className="p-3 md:p-4">
+        <h3 className="font-semibold text-dark mb-1.5 md:mb-2 line-clamp-2 min-h-[2.5rem] md:min-h-[3rem] text-sm md:text-base">
           {movie.title}
         </h3>
-        <div className="flex items-center justify-between text-sm text-dark-medium">
-          <span className="flex items-center gap-1">
-            <StarIcon className="w-4 h-4" />
+        <div className="flex items-center justify-between text-xs md:text-sm text-dark-medium">
+          <span className="flex items-center gap-0.5 md:gap-1">
+            <StarIcon className="w-3 h-3 md:w-4 md:h-4" />
             {formatRating(movie.vote_average)}
           </span>
-          <span className="flex items-center gap-1">
-            <CalendarIcon className="w-4 h-4" />
+          <span className="flex items-center gap-0.5 md:gap-1">
+            <CalendarIcon className="w-3 h-3 md:w-4 md:h-4" />
             {formatYear(movie.release_date)}
           </span>
         </div>

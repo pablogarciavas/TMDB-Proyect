@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Header, SearchBar } from './components/common';
 import { MovieListPage, MovieDetail, PersonMoviesPage, CompanyMoviesPage, WatchlistPage, UpcomingPage, MovieGuessGame } from './components/movie';
 import { Movie } from './types/movie';
@@ -113,24 +113,16 @@ function App() {
     scrollTo(0, { immediate: false });
   };
 
-  // Ocultar contenido crítico del HTML después del primer render
-  useEffect(() => {
-    const criticalContent = document.querySelector('#root > header, #root > main')
-    if (criticalContent) {
-      criticalContent.remove()
-    }
-  }, [])
-
   return (
     <div className="min-h-screen bg-beige flex flex-col">
       <Header onGenreSelect={handleGenreSelect} onNavigate={handleNavigate} />
       
-      <main className={`flex-1 ${currentView === 'home' ? 'flex items-start justify-center pt-48' : ''}`}>
+      <main className={`flex-1 ${currentView === 'home' ? 'flex items-start justify-center pt-32 md:pt-48' : ''}`}>
         <div className="container-elegant w-full">
           {currentView === 'home' && (
-            <div className="flex flex-col items-center justify-start pt-20">
+            <div className="flex flex-col items-center justify-start pt-12 md:pt-20 w-full">
               {/* Search bar positioned higher - visible inmediatamente para mejor LCP */}
-              <div className="w-full max-w-2xl mx-auto">
+              <div className="w-full max-w-2xl mx-auto px-3 sm:px-4">
                 <SearchBar 
                   onMovieSelect={handleMovieSelect}
                   onPersonSelect={handlePersonSelect}
